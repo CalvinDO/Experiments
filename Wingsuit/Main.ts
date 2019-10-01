@@ -10,7 +10,6 @@ namespace Wingsuit {
     import Vector2D = Vector.Vector2D;
 
 
-
     window.addEventListener("load", init);
 
     //p = pull, s = speed, r= result
@@ -28,6 +27,8 @@ namespace Wingsuit {
         crc2.translate(canvas.width / 2, canvas.height / 2);
 
         animate();
+        drawBackground(canvas.width / -2, canvas.height / -2, canvas.width, canvas.height);
+    }
 
     function drawBackground(_x: number, _y: number, _w: number, _h: number) {
         crc2.beginPath();
@@ -50,8 +51,8 @@ namespace Wingsuit {
         crc2.fill()
     }
 
-
-    /*function drawPointer(_radius: number){
+    /*
+    function drawPointer(_radius: number){
         crc2.beginPath();
         crc2.strokeStyle = "green";
         crc2.arc(0, 0, _radius, 0 * Math.PI, 2 * Math.PI, null);
@@ -66,23 +67,19 @@ namespace Wingsuit {
     crc2.moveTo(_startX, _startY);
     crc2.lineTo(_endX, _endY);
     crc2.stroke();
-}
-
-function moveBall() {
-
-}
-
-*/
+    }
+ 
+    function moveBall() {
+    }
+ 
+    */
 
 
     function animate() {
 
-        position += 1;
+        i += 1;
+        console.log(i);
 
-
-        box.style.transform = `translateX(${position}px)`;
-
-        // Start next frame
         requestAnimationFrame(animate);
     }
 }
