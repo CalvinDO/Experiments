@@ -2,11 +2,11 @@ namespace Wingsuit {
     let crc2: CanvasRenderingContext2D;
 
     const timeSliceInMS: number = 1;
-    const box = document.querySelector('.Box');
+    
     // Initial position
     let position = 0;
     let gravity = 5;
-
+    let gravity2 = 5;
     import Vector2D = Vector.Vector2D;
 
 
@@ -15,13 +15,19 @@ namespace Wingsuit {
 
 
     let vPull: Vector2D = new Vector2D(0, 0);
+    let vPull2: Vector2D = new Vector2D(0, 0);
+    let vPull3: Vector2D = new Vector2D(0, 0);
+
     let vSpeed: Vector2D = new Vector2D(0, 0);
-    let vResult: Vector2D = new Vector2D(0, 0);
+    let vSpeed2: Vector2D = new Vector2D(0, 0);
+    //let vResult: Vector2D = new Vector2D(0, 0);
     let vBall: Vector2D = new Vector2D(0, 0);
+    let vBall2: Vector2D = new Vector2D(0, 0);
     let vPointer: Vector2D = new Vector2D(0, 0);
     let vGravity: Vector2D = new Vector2D(0, gravity);
+    let vGravity2: Vector2D = new Vector2D(0, gravity);
     let vFriction: Vector2D = new Vector2D(0, 0);
-
+    let vFriction2: Vector2D = new Vector2D(0, 0);
 
 
     let xMouse: number = 0;
@@ -46,12 +52,14 @@ namespace Wingsuit {
         // console.log(_event.clientX, _event.clientY);
         xMouse = _event.clientX - canvas.width / 2;
         yMouse = _event.clientY - canvas.height / 2;
+
+        vPointer.x = xMouse;
+        vPointer.y = yMouse;
     }
 
 
     function drawBackground(_x: number, _y: number, _w: number, _h: number) {
         crc2.beginPath();
-
         let colorAngle: number = 10;
         crc2.strokeStyle = "rgb(102, 255, 255)";
         crc2.fillStyle = "rgb(102, 255, 255)";
@@ -70,6 +78,14 @@ namespace Wingsuit {
         crc2.fill()
     }
 
+    function drawBall2(_radius: number) {
+        crc2.beginPath();
+        crc2.strokeStyle = "red";
+        crc2.fillStyle = "red";
+        crc2.arc(vBall2.x, vBall2.y, _radius, 0 * Math.PI, 2 * Math.PI, null);
+        crc2.stroke();
+        crc2.fill()
+    }
 
     function drawPointer(_radius: number) {
         crc2.beginPath();
@@ -82,23 +98,37 @@ namespace Wingsuit {
 
     function moveBall() {
 
-        vPointer.x = xMouse;
-        vPointer.y = yMouse;
-
         vPull = vBall.getDiff(vPointer);
         vPull.x *= -1 / 100;
         vPull.y *= -1 / 100;
 
+        vPull2 = vBall2.getDiff(vBall);
+        vPull2.x *= -1 / 100;
+        vPull2.y *= -1 / 100;
+
+        vPull3.x = vPull2.x/-1;
+        vPull3.y = vPull2.y/-1;
+
         vSpeed.add(vGravity);
         vSpeed.add(vPull);
+
+        vSpeed.add(vPull3);
         
+        vSpeed2.add(vGravity2);
+        vSpeed2.add(vPull2);
+
         vFriction.x= vSpeed.x/50;
         vFriction.y= vSpeed.y/50;
         
+        vFriction2.x= vSpeed2.x/50;
+        vFriction2.y= vSpeed2.y/50;
+        
         vSpeed.subtract(vFriction);
+        vSpeed2.subtract(vFriction2);
 
         vBall.add(vSpeed);
-
+        vBall2.add(vSpeed2);
+        
         console.log(vPointer, vPull, vSpeed, vBall, vFriction);
     }
 
@@ -114,6 +144,14 @@ namespace Wingsuit {
         crc2.stroke();
     }
 
+    function drawPull2(_width: number): void {
+        crc2.beginPath();
+        crc2.strokeStyle = "black";
+        crc2.lineWidth = _width;
+        crc2.moveTo(vBall2.x, vBall2.y);
+        crc2.lineTo(vBall.x, vBall.y);
+        crc2.stroke();
+    }
 
 
     function animate() {
@@ -122,7 +160,9 @@ namespace Wingsuit {
         drawPointer(25);
         moveBall();
         drawBall(50);
+        drawBall2(40);
         drawPull(5);
+        drawPull2(5);
 
         requestAnimationFrame(animate);
     }
