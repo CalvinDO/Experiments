@@ -60,13 +60,11 @@ namespace Wingsuit {
 
     function drawBackground(_x: number, _y: number, _w: number, _h: number) {
         crc2.beginPath();
-        let colorAngle: number = 10;
         crc2.strokeStyle = "rgb(102, 255, 255)";
         crc2.fillStyle = "rgb(102, 255, 255)";
         crc2.rect(_x, _y, _w, _h)
         crc2.stroke();
         crc2.fill()
-        crc2.fillStyle
     }
 
     function drawBall(_radius: number) {
