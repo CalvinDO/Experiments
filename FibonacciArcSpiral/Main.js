@@ -1,18 +1,20 @@
-var Fibonacci;
-(function (Fibonacci) {
+var FibonacciArcSpiral;
+(function (FibonacciArcSpiral) {
     let crc2;
     let canvas;
     window.addEventListener("load", init);
     var Vector2D = Vector.Vector2D;
     let fibonacciArray = new Array();
+    let xPositionsArray = new Array();
+    let yPositionsArray = new Array();
     let vAccelaration = new Vector2D(0, 0);
     let vSpeed = new Vector2D(0, 0);
-    let vBall = new Vector2D(0, 0);
-    let maxRecursion = 35;
-    let startSize = 2000;
+    let vBall = new Vector2D(-1000, -1000);
+    let maxRecursion = 21;
+    let startSize = 1;
     let recursionLevel = 0;
     let frame = 0;
-    let vLine = new Vector2D(0, 0);
+    //let vLine: Vector2D = new Vector2D(0, 0);
     let counterFour = 0;
     function init(_event) {
         canvas = document.querySelector("canvas");
@@ -31,8 +33,11 @@ var Fibonacci;
         crc2.fill();
     }
     function calculateSequence(n) {
-        if (n == 0 || n == 1) {
+        if (n == 1) {
             return 1;
+        }
+        if (n == 0) {
+            return 0;
         }
         else {
             return calculateSequence(n - 1) + calculateSequence(n - 2);
@@ -45,28 +50,28 @@ var Fibonacci;
         else
             counterFour = 0;
         if (counterFour == 0) {
-            vLine.x = 0;
-            vLine.y = _fibDigit;
+            vBall.x += 0;
+            vBall.y += _fibDigit;
         }
         if (counterFour == 1) {
-            vLine.x = _fibDigit * -1;
-            vLine.y = 0;
+            vBall.x += _fibDigit * -1;
+            vBall.y += 0;
         }
         if (counterFour == 2) {
-            vLine.x = 0;
-            vLine.y = _fibDigit * -1;
+            vBall.x += 0;
+            vBall.y += _fibDigit * -1;
         }
         if (counterFour == 3) {
-            vLine.x = _fibDigit;
-            vLine.y = 0;
+            vBall.x += _fibDigit;
+            vBall.y += 0;
         }
+        xPositionsArray[_recursionLevel] = vBall.x;
+        yPositionsArray[_recursionLevel] = vBall.y;
         console.log("count4: " + counterFour);
         console.log("_rec" + _recursionLevel);
         console.log("rec" + recursionLevel);
         console.log("_fib" + _fibDigit);
-        console.log(vLine);
-        console.log(vBall);
-        vBall.getSum(vLine);
+        console.log(vBall.x, vBall.y);
     }
     function createFibArray() {
         for (let i = 0; i < maxRecursion; i++) {
@@ -74,27 +79,36 @@ var Fibonacci;
         }
         console.log(fibonacciArray);
     }
-    function drawLine(_fibDigit) {
-        crc2.beginPath();
-        crc2.strokeStyle = "black";
-        crc2.lineWidth = startSize / (_fibDigit);
-        crc2.moveTo(vBall.x, vBall.y);
-        crc2.lineTo(vLine.x, vLine.y);
-        crc2.stroke();
-    }
-    function drawBall(_fibDigit) {
+    function drawLine(_fibDigit, _recursionLevel) {
         crc2.beginPath();
         crc2.strokeStyle = "hsla(130, 82%, 42%, 0.47)";
         crc2.fillStyle = "hsla(130, 82%, 42%, 0.47)";
-        crc2.arc(vBall.x, vBall.y, startSize / (_fibDigit * 10), 0 * Math.PI, 2 * Math.PI, null);
+        crc2.lineWidth = startSize * (_fibDigit / 10);
+        crc2.moveTo(xPositionsArray[_recursionLevel], yPositionsArray[_recursionLevel]);
+        crc2.lineTo(xPositionsArray[_recursionLevel - 1], yPositionsArray[_recursionLevel - 1]);
+        crc2.stroke();
+    }
+    function drawBall(_fibDigit, _recursionLevel) {
+        crc2.beginPath();
+        crc2.strokeStyle = "hsla(130, 82%, 62%, 0.87)";
+        crc2.fillStyle = "hsla(130, 82%, 62%, 0.87)";
+        crc2.arc(xPositionsArray[_recursionLevel], yPositionsArray[_recursionLevel], startSize * (_fibDigit / 30), 0 * Math.PI, 2 * Math.PI, null);
         crc2.stroke();
         crc2.fill();
+    }
+    function drawArc(_fibDigit, _recursionLevel) {
+        crc2.beginPath();
+        crc2.strokeStyle = "hsla(130, 82%, 62%, 0.87)";
+        crc2.fillStyle = "hsla(130, 82%, 62%, 0.87)";
+        crc2.arc(xPositionsArray[_recursionLevel], yPositionsArray[_recursionLevel], _fibDigit, counterFour * Math.PI, counterFour * Math.PI / 2, null);
+        crc2.stroke();
     }
     function animate() {
         recursionLevel++;
         calculatePositions(fibonacciArray[recursionLevel], recursionLevel);
-        drawLine(fibonacciArray[recursionLevel]);
-        drawBall(fibonacciArray[recursionLevel]);
+        drawLine(fibonacciArray[recursionLevel], recursionLevel);
+        drawBall(fibonacciArray[recursionLevel], recursionLevel);
+        drawArc(fibonacciArray[recursionLevel], recursionLevel);
         console.log(fibonacciArray[recursionLevel]);
         console.log(recursionLevel);
         console.log(counterFour);
@@ -102,5 +116,5 @@ var Fibonacci;
             requestAnimationFrame(animate);
         }
     }
-})(Fibonacci || (Fibonacci = {}));
+})(FibonacciArcSpiral || (FibonacciArcSpiral = {}));
 //# sourceMappingURL=Main.js.map
