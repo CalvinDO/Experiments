@@ -19,7 +19,7 @@ namespace CalvinFraktal {
             this.color = "HSLA(" + this.colorAngle + ",100%,50%, 0.6)";
         }
 
-   
+        
 
         draw(): void {
             crc2.beginPath();
