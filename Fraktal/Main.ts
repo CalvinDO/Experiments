@@ -25,7 +25,6 @@ namespace CalvinFraktal {
             ball.createChildren(nChildren);
         }
         console.log(calvinsBall);
-        
     }
 
 

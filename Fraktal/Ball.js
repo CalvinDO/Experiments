@@ -13,9 +13,6 @@ var CalvinFraktal;
             this.colorAngle = _colorAngle;
             this.color = "HSLA(" + this.colorAngle + ",100%,50%, 0.6)";
         }
-        move() {
-            this.position.add(this.speed);
-        }
         draw() {
             CalvinFraktal.crc2.beginPath();
             CalvinFraktal.crc2.fillStyle = this.color;

@@ -8,7 +8,7 @@ namespace CalvinFraktal {
         public speed: V2 = new V2(0, 0);
         public radius: number;
         public level: number;
-        public color: string = ""
+        public color: string = "";
         public colorAngle: number;
  
         constructor(_x: number, _y: number, _radius: number, _level: number, _colorAngle: number) {
@@ -19,9 +19,7 @@ namespace CalvinFraktal {
             this.color = "HSLA(" + this.colorAngle + ",100%,50%, 0.6)";
         }
 
-        move(): void {
-            this.position.add(this.speed);
-        }
+   
 
         draw(): void {
             crc2.beginPath();
