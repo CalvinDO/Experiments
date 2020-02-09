@@ -10,7 +10,9 @@ namespace CalvinFraktal {
         public level: number;
         public color: string = "";
         public colorAngle: number;
- 
+        public gradColorAngle: number;
+
+
         constructor(_x: number, _y: number, _radius: number, _level: number, _colorAngle: number) {
             this.position.setXY(_x, _y);
             this.radius = _radius;
@@ -18,8 +20,6 @@ namespace CalvinFraktal {
             this.colorAngle = _colorAngle;
             this.color = "HSLA(" + this.colorAngle + ",100%,50%, 0.6)";
         }
-
-        
 
         draw(): void {
             crc2.beginPath();
@@ -29,24 +29,19 @@ namespace CalvinFraktal {
         }
 
         createChildren(_nChildren: number): void {
-            let level: number = this.level + 1;
-            this.colorAngle = 0;
-
-
+            this.level += 1;
+            this.colorAngle -= gradientFactor;
+            this.gradColorAngle -= internGradientFactor;
             for (let i: number = 0; i < _nChildren; i++) {
-                this.colorAngle -= 5;
                 let angle: number = (i * 1 / _nChildren * 2 * Math.PI);
                 let x: number = this.position.x + this.radius * Math.sin(angle);
                 let y: number = this.position.y + this.radius * Math.cos(angle);
-                let ball: Ball = new Ball(x, y, this.radius / 2.5, level, this.colorAngle);
+                let ball: Ball = new Ball(x, y, this.radius / 2.5, this.level, this.colorAngle - internGradientFactor);
                 ball.draw();
-                //children.push(ball);
-                if (level < nRecursionLevelMax) {
+                if (this.level < nRecursionLevelMax) {
                     ball.createChildren(_nChildren);
                 }
             }
-            //console.log(children);
         }
     }
-
 }

@@ -20,21 +20,19 @@ var CalvinFraktal;
             CalvinFraktal.crc2.fill();
         }
         createChildren(_nChildren) {
-            let level = this.level + 1;
-            this.colorAngle = 0;
+            this.level += 1;
+            this.colorAngle -= CalvinFraktal.gradientFactor;
+            this.gradColorAngle -= CalvinFraktal.internGradientFactor;
             for (let i = 0; i < _nChildren; i++) {
-                this.colorAngle -= 5;
                 let angle = (i * 1 / _nChildren * 2 * Math.PI);
                 let x = this.position.x + this.radius * Math.sin(angle);
                 let y = this.position.y + this.radius * Math.cos(angle);
-                let ball = new Ball(x, y, this.radius / 2.5, level, this.colorAngle);
+                let ball = new Ball(x, y, this.radius / 2.5, this.level, this.colorAngle - CalvinFraktal.internGradientFactor);
                 ball.draw();
-                //children.push(ball);
-                if (level < CalvinFraktal.nRecursionLevelMax) {
+                if (this.level < CalvinFraktal.nRecursionLevelMax) {
                     ball.createChildren(_nChildren);
                 }
             }
-            //console.log(children);
         }
     }
     CalvinFraktal.Ball = Ball;
