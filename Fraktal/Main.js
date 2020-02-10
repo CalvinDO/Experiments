@@ -1,23 +1,33 @@
 var CalvinFraktal;
 (function (CalvinFraktal) {
-    CalvinFraktal.nRecursionLevelMax = 6;
-    CalvinFraktal.gradientFactor = 20;
-    CalvinFraktal.internGradientFactor = 100;
-    let nChildren = 5;
+    let childrenAmount;
+    let radius;
     window.addEventListener("load", init);
+    document.addEventListener("input", update);
     function init(_event) {
         let canvas = document.querySelector("canvas");
         CalvinFraktal.crc2 = canvas.getContext("2d");
         drawBackground();
         CalvinFraktal.crc2.translate(canvas.width / 2, canvas.height / 2);
-        let radius = canvas.width / 5;
+        update(null);
+    }
+    function update(_event) {
+        let inputs = document.querySelectorAll("input");
+        childrenAmount = parseInt(inputs[0].value);
+        radius = parseFloat(inputs[1].value);
+        CalvinFraktal.sizeFactor = parseFloat(inputs[2].value);
+        CalvinFraktal.gradientFactor = parseFloat(inputs[3].value);
+        CalvinFraktal.internGradientFactor = parseFloat(inputs[4].value);
+        CalvinFraktal.maxRecursionLevel = parseInt(inputs[5].value);
+        CalvinFraktal.crc2.clearRect(-CalvinFraktal.crc2.canvas.width, -CalvinFraktal.crc2.canvas.height, CalvinFraktal.crc2.canvas.width, CalvinFraktal.crc2.canvas.height);
+        drawBackground();
         let ball = new CalvinFraktal.Ball(0, 0, radius, 0, 100);
         ball.draw();
-        ball.createChildren(nChildren);
+        ball.createChildren(childrenAmount);
     }
     function drawBackground() {
         CalvinFraktal.crc2.fillStyle = "orange";
-        CalvinFraktal.crc2.fillRect(0, 0, CalvinFraktal.crc2.canvas.width, CalvinFraktal.crc2.canvas.height);
+        CalvinFraktal.crc2.fillRect(-CalvinFraktal.crc2.canvas.width, -CalvinFraktal.crc2.canvas.height, CalvinFraktal.crc2.canvas.width, CalvinFraktal.crc2.canvas.height);
     }
 })(CalvinFraktal || (CalvinFraktal = {}));
 //# sourceMappingURL=Main.js.map

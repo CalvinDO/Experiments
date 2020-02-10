@@ -27,9 +27,9 @@ var CalvinFraktal;
                 let angle = (i * 1 / _nChildren * 2 * Math.PI);
                 let x = this.position.x + this.radius * Math.sin(angle);
                 let y = this.position.y + this.radius * Math.cos(angle);
-                let ball = new Ball(x, y, this.radius / 2.5, this.level, this.colorAngle - CalvinFraktal.internGradientFactor);
+                let ball = new Ball(x, y, this.radius / CalvinFraktal.sizeFactor, this.level, this.colorAngle - CalvinFraktal.internGradientFactor);
                 ball.draw();
-                if (this.level < CalvinFraktal.nRecursionLevelMax) {
+                if (this.level < CalvinFraktal.maxRecursionLevel) {
                     ball.createChildren(_nChildren);
                 }
             }

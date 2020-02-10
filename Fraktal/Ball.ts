@@ -1,8 +1,5 @@
 namespace CalvinFraktal {
     import V2 = Vector.Vector2D;
-
-    //let children: Ball[] = [];
-
     export class Ball {
         public position: V2 = new V2(0, 0);
         public speed: V2 = new V2(0, 0);
@@ -11,7 +8,6 @@ namespace CalvinFraktal {
         public color: string = "";
         public colorAngle: number;
         public gradColorAngle: number;
-
 
         constructor(_x: number, _y: number, _radius: number, _level: number, _colorAngle: number) {
             this.position.setXY(_x, _y);
@@ -36,9 +32,9 @@ namespace CalvinFraktal {
                 let angle: number = (i * 1 / _nChildren * 2 * Math.PI);
                 let x: number = this.position.x + this.radius * Math.sin(angle);
                 let y: number = this.position.y + this.radius * Math.cos(angle);
-                let ball: Ball = new Ball(x, y, this.radius / 2.5, this.level, this.colorAngle - internGradientFactor);
+                let ball: Ball = new Ball(x, y, this.radius / sizeFactor, this.level, this.colorAngle - internGradientFactor);
                 ball.draw();
-                if (this.level < nRecursionLevelMax) {
+                if (this.level < maxRecursionLevel) {
                     ball.createChildren(_nChildren);
                 }
             }
