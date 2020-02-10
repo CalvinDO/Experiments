@@ -1,5 +1,5 @@
-var CalvinFraktal;
-(function (CalvinFraktal) {
+var FraktalAnimation;
+(function (FraktalAnimation) {
     var V2 = Vector.Vector2D;
     class Ball {
         constructor(_x, _y, _radius, _level, _colorAngle) {
@@ -13,28 +13,28 @@ var CalvinFraktal;
             this.color = "HSLA(" + this.colorAngle + ",100%,50%, 0.6)";
         }
         draw() {
-            CalvinFraktal.crc2.beginPath();
-            CalvinFraktal.crc2.fillStyle = this.color;
-            CalvinFraktal.crc2.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, null);
-            CalvinFraktal.crc2.fill();
+            FraktalAnimation.crc2.beginPath();
+            FraktalAnimation.crc2.fillStyle = this.color;
+            FraktalAnimation.crc2.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, null);
+            FraktalAnimation.crc2.fill();
         }
         createChildren(_nChildren) {
             this.level += 1;
-            this.colorAngle += CalvinFraktal.gradientFactor;
+            this.colorAngle += FraktalAnimation.gradientFactor;
             this.gradColorAngle = this.colorAngle;
             for (let i = 0; i < _nChildren; i++) {
-                this.gradColorAngle += CalvinFraktal.internGradientFactor;
+                this.gradColorAngle += FraktalAnimation.internGradientFactor;
                 let angle = (i * 1 / _nChildren * 2 * Math.PI);
                 let x = this.position.x + this.radius * Math.sin(angle);
                 let y = this.position.y + this.radius * Math.cos(angle);
-                let ball = new Ball(x, y, this.radius / CalvinFraktal.sizeFactor, this.level, this.gradColorAngle);
+                let ball = new Ball(x, y, this.radius / FraktalAnimation.sizeFactor, this.level, this.gradColorAngle);
                 ball.draw();
-                if (this.level < CalvinFraktal.maxRecursionLevel) {
+                if (this.level < FraktalAnimation.maxRecursionLevel) {
                     ball.createChildren(_nChildren);
                 }
             }
         }
     }
-    CalvinFraktal.Ball = Ball;
-})(CalvinFraktal || (CalvinFraktal = {}));
+    FraktalAnimation.Ball = Ball;
+})(FraktalAnimation || (FraktalAnimation = {}));
 //# sourceMappingURL=Ball.js.map

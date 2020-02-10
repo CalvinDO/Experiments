@@ -1,4 +1,4 @@
-namespace CalvinFraktal {
+namespace FraktalAnimation {
     import V2 = Vector.Vector2D;
     export let crc2: CanvasRenderingContext2D;
 
@@ -8,8 +8,8 @@ namespace CalvinFraktal {
     export let gradientFactor: number;
     export let internGradientFactor: number;
     export let maxRecursionLevel: number;
-    export let color: number;
     let backgroundColor: string = "";
+    let frame: number = 0;
 
     window.addEventListener("load", init);
     document.addEventListener("input", update);
@@ -39,6 +39,10 @@ namespace CalvinFraktal {
         let ball: Ball = new Ball(0, 0, radius, 0, 0);
         ball.draw();
         ball.createChildren(childrenAmount);
+
+        if (inputs[7].checked) {
+            animate();
+        }
     }
 
 
@@ -46,4 +50,20 @@ namespace CalvinFraktal {
         crc2.fillStyle = backgroundColor;
         crc2.fillRect(-crc2.canvas.width, -crc2.canvas.height, crc2.canvas.width * 2, crc2.canvas.height * 2);
     }
+
+    function animate() {
+        frame++;
+        gradientFactor =
+        crc2.clearRect(-crc2.canvas.width, -crc2.canvas.height, crc2.canvas.width, crc2.canvas.height);
+        drawBackground();
+
+        let ball: Ball = new Ball(0, 0, radius, 0, 0);
+        ball.draw();
+        ball.createChildren(childrenAmount);
+
+
+        requestAnimationFrame(animate);
+    }
+
+
 }

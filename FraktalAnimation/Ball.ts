@@ -1,4 +1,4 @@
-namespace CalvinFraktal {
+namespace FraktalAnimation {
     import V2 = Vector.Vector2D;
     export class Ball {
         public position: V2 = new V2(0, 0);
