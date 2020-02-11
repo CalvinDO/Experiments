@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>CalvinFraktal</title>
-		<script src="../Vector.js"></script>
-		<script src="Ball.js"></script>
-		<script src="Main.js"></script>
-	</head>
-	<body>
-		childrenAmount<input type="number" id="childrenAmount" value="5" step="1" /> &nbsp; 
-		radius<input type="number" id="radius" value= "300" min="1" step="5" />
-		sizeFactor<input type="number" id="sizeFactor" value="2.4" step="0.01" />
-		gradientFactor<input type="number" id="gradientFactor" value="-10" step="0.5" />
-		internGradientFactor<input type="number" id="internGradientFactor" value="5" step="0.2" />
-		maxRecursionLevel<input type="number" id="maxRecursionLevel" value="5" step="1" />
-		backgroundColor<input type= "color" id = "backgroundColor" value = "#FFFFFF">
-		startAnimation<input type="checkbox" name="startAnimation">
-		<canvas width="1920" height="1080"></canvas>
-	</body>
-</html> 
+
+<head>
+	<title>CalvinFraktal</title>
+	<script src="../Vector.js"></script>
+	<script src="Ball.js"></script>
+	<script src="Main.js"></script>
+</head>
+
+<body>
+	childrenAmount<input type="number" id="childrenAmount" value="4" step="1" /> &nbsp;
+	radius<input type="number" id="radius" value="250" min="1" step="5" />
+	sizeFactor<input type="number" id="sizeFactor" value="2" step="0.01" />
+	gradientFactor<input type="number" id="gradientFactor" value="-10" step="0.5" />
+	internGradientFactor<input type="number" id="internGradientFactor" value="0" step="0.2" />
+	maxRecursionLevel<input type="number" id="maxRecursionLevel" value="6" step="1" />
+	backgroundColor<input type="color" id="backgroundColor" value="#000000">
+	startAnimation<input type="checkbox" name="startAnimation">
+	zoomSpeed<input type="number" id="zoomSpeed" value="300" step="20" /> &nbsp;
+	zoomDepth<input type="number" id="zoomDepth" value="250" step="5" /> &nbsp;
+	rotationSpeed<input type="number" id="rotationSpeed" value="1" step="1" /> &nbsp;
+	spreadFactor<input type="number" id="spreadFactor" value="2" step="0.1" /> &nbsp;
+	<canvas width="1920" height="1080"></canvas>
+</body>
+
+</html>
