@@ -50,6 +50,7 @@ var FraktalAnimation;
         FraktalAnimation.crc2.fillRect(-FraktalAnimation.crc2.canvas.width, -FraktalAnimation.crc2.canvas.height, FraktalAnimation.crc2.canvas.width * 2, FraktalAnimation.crc2.canvas.height * 2);
     }
     function animate() {
+        console.log("" + Math.random() * 3581321);
         frame++;
         radius = startRadius + zoomDepth + Math.sin(frame / zoomSpeed * 2 * Math.PI) * zoomDepth;
         FraktalAnimation.rotationAngle = -Math.sin(frame / zoomSpeed * 2 * Math.PI) * rotationSpeed / 20;

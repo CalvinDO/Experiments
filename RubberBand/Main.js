@@ -4,8 +4,8 @@ var Wingsuit;
     const timeSliceInMS = 1;
     // Initial position
     let position = 0;
-    let gravity = 5;
-    let gravity2 = 5;
+    let gravity = 3;
+    let gravity2 = 3;
     var Vector2D = Vector.Vector2D;
     window.addEventListener("load", init);
     window.addEventListener("mousemove", trackMouseMove);
@@ -112,7 +112,7 @@ var Wingsuit;
         crc2.stroke();
     }
     function animate() {
-        drawBackground(canvas.width / -2, canvas.height / -2, canvas.width, canvas.height);
+        drawBackground(-canvas.width, -canvas.height, canvas.width, canvas.height);
         drawPointer(25);
         moveBall();
         drawBall(50);

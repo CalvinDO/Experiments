@@ -5,8 +5,8 @@ namespace Wingsuit {
     
     // Initial position
     let position = 0;
-    let gravity = 5;
-    let gravity2 = 5;
+    let gravity = 3;
+    let gravity2 = 3;
     import Vector2D = Vector.Vector2D;
 
 
