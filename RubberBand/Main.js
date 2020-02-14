@@ -4,8 +4,8 @@ var Wingsuit;
     const timeSliceInMS = 1;
     // Initial position
     let position = 0;
-    let gravity = 3;
-    let gravity2 = 3;
+    let gravity = 2;
+    let gravity2 = 2;
     var Vector2D = Vector.Vector2D;
     window.addEventListener("load", init);
     window.addEventListener("mousemove", trackMouseMove);
@@ -73,11 +73,11 @@ var Wingsuit;
     }
     function moveBall() {
         vPull = vBall.getDiff(vPointer);
-        vPull.x *= -1 / 100;
-        vPull.y *= -1 / 100;
+        vPull.x *= -1 / 50;
+        vPull.y *= -1 / 50;
         vPull2 = vBall2.getDiff(vBall);
-        vPull2.x *= -1 / 100;
-        vPull2.y *= -1 / 100;
+        vPull2.x *= -1 / 50;
+        vPull2.y *= -1 / 50;
         vPull3.x = vPull2.x / -1;
         vPull3.y = vPull2.y / -1;
         vSpeed.add(vGravity);
@@ -112,13 +112,13 @@ var Wingsuit;
         crc2.stroke();
     }
     function animate() {
-        drawBackground(-canvas.width, -canvas.height, canvas.width, canvas.height);
-        drawPointer(25);
+        drawBackground(-canvas.width * 10, -canvas.height * 10, canvas.width * 10, canvas.height * 10);
+        drawPointer(7);
         moveBall();
-        drawBall(50);
-        drawBall2(40);
-        drawPull(5);
-        drawPull2(5);
+        drawBall(20);
+        drawBall2(20);
+        drawPull(4);
+        drawPull2(3);
         requestAnimationFrame(animate);
     }
 })(Wingsuit || (Wingsuit = {}));

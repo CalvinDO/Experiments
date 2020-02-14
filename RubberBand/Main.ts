@@ -5,8 +5,8 @@ namespace Wingsuit {
     
     // Initial position
     let position = 0;
-    let gravity = 3;
-    let gravity2 = 3;
+    let gravity = 2;
+    let gravity2 = 2;
     import Vector2D = Vector.Vector2D;
 
 
@@ -29,16 +29,11 @@ namespace Wingsuit {
     let vFriction: Vector2D = new Vector2D(0, 0);
     let vFriction2: Vector2D = new Vector2D(0, 0);
 
-
     let xMouse: number = 0;
     let yMouse: number = 0;
 
-
     let i: number = 0;
     let canvas: HTMLCanvasElement;
-
-
-
 
     function init(_event: Event): void {
         canvas = document.querySelector("canvas");
@@ -97,12 +92,12 @@ namespace Wingsuit {
     function moveBall() {
 
         vPull = vBall.getDiff(vPointer);
-        vPull.x *= -1 / 100;
-        vPull.y *= -1 / 100;
+        vPull.x *= -1 / 50;
+        vPull.y *= -1 / 50;
 
         vPull2 = vBall2.getDiff(vBall);
-        vPull2.x *= -1 / 100;
-        vPull2.y *= -1 / 100;
+        vPull2.x *= -1 / 50;
+        vPull2.y *= -1 / 50;
 
         vPull3.x = vPull2.x/-1;
         vPull3.y = vPull2.y/-1;
@@ -154,13 +149,13 @@ namespace Wingsuit {
 
     function animate() {
 
-        drawBackground(-canvas.width , -canvas.height, canvas.width, canvas.height);
-        drawPointer(25);
+        drawBackground(-canvas.width *10, -canvas.height*10, canvas.width*10, canvas.height*10);
+        drawPointer(7);
         moveBall();
-        drawBall(50);
-        drawBall2(40);
-        drawPull(5);
-        drawPull2(5);
+        drawBall(20);
+        drawBall2(20);
+        drawPull(4);
+        drawPull2(3);
 
         requestAnimationFrame(animate);
     }
