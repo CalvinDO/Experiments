@@ -149,7 +149,7 @@ namespace Wingsuit {
 
     function animate() {
 
-        drawBackground(-canvas.width *10, -canvas.height*10, canvas.width*10, canvas.height*10);
+        drawBackground(-canvas.width, -canvas.height, canvas.width*2, canvas.height*2);
         drawPointer(7);
         moveBall();
         drawBall(20);

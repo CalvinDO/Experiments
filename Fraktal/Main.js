@@ -2,6 +2,7 @@ var CalvinFraktal;
 (function (CalvinFraktal) {
     let childrenAmount;
     let radius;
+    CalvinFraktal.mousePos = new Vector2D(0, 0);
     let backgroundColor = "";
     window.addEventListener("load", init);
     document.addEventListener("input", update);
@@ -11,6 +12,13 @@ var CalvinFraktal;
         drawBackground();
         CalvinFraktal.crc2.translate(canvas.width / 2, canvas.height / 2);
         update(null);
+    }
+    function trackMouseMove(_event) {
+        // console.log(_event.clientX, _event.clientY);
+        xMouse = _event.clientX - canvas.width / 2;
+        yMouse = _event.clientY - canvas.height / 2;
+        vPointer.x = xMouse;
+        vPointer.y = yMouse;
     }
     function update(_event) {
         let inputs = document.querySelectorAll("input");

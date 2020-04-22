@@ -9,7 +9,9 @@ namespace CalvinFraktal {
     export let internGradientFactor: number;
     export let maxRecursionLevel: number;
     export let color: number;
+    export let mousePos: Vector2D = new Vector2D(0, 0);
     let backgroundColor: string = "";
+
 
     window.addEventListener("load", init);
     document.addEventListener("input", update);
@@ -20,6 +22,15 @@ namespace CalvinFraktal {
         drawBackground();
         crc2.translate(canvas.width / 2, canvas.height / 2);
         update(null);
+    }
+
+    function trackMouseMove(_event: MouseEvent): void {
+        // console.log(_event.clientX, _event.clientY);
+        xMouse = _event.clientX - canvas.width / 2;
+        yMouse = _event.clientY - canvas.height / 2;
+
+        vPointer.x = xMouse;
+        vPointer.y = yMouse;
     }
 
     function update(_event: Event): void {
@@ -41,6 +52,7 @@ namespace CalvinFraktal {
         ball.createChildren(childrenAmount);
     }
 
+    
 
     function drawBackground(): void {
         crc2.fillStyle = backgroundColor;
