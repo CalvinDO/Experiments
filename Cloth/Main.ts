@@ -4,7 +4,7 @@ namespace Cloth {
     const timeSliceInMS: number = 1;
 
     import Vector2D = Vector.Vector2D;
-    export let offset: number;
+    let offset: number;
     export let gravity: Vector2D = new Vector2D(0, 0);
 
     let animation: boolean = false;
@@ -71,33 +71,21 @@ namespace Cloth {
     }
 
     function setNeighbours(): void {
-        let neighbours: Ball[] = [];
-        for (let xIndex: number = 0; xIndex < 20; xIndex++) {
+
+        let offsets: number[][] = [[0, -1], [1, 0], [0, -1], [-1, 0]];
+        for (let xIndex: number = 0; xIndex < balls.length; xIndex++) {
             let ballsCol: Ball[] = [];
             for (let yIndex: number = 0; yIndex < balls[0].length; yIndex++) {
-                if (xIndex == 0) {
-                    neighbours.push(balls[xIndex][yIndex - 1]);
-                    neighbours.push(balls[xIndex + 1][yIndex]);
-                    neighbours.push(balls[xIndex][yIndex + 1]);
-                } else if (xIndex == balls.length) {
-                    neighbours.push(balls[xIndex][yIndex - 1]);
-                    neighbours.push(balls[xIndex][yIndex + 1]);
-                    neighbours.push(balls[xIndex - 1][yIndex]);
-                } else if (yIndex == 0) {
-                    neighbours.push(balls[xIndex + 1][yIndex]);
-                    neighbours.push(balls[xIndex][yIndex + 1]);
-                    neighbours.push(balls[xIndex - 1][yIndex]);
-                } else if (yIndex == balls[0].length) {
-                    neighbours.push(balls[xIndex][yIndex - 1]);
-                    neighbours.push(balls[xIndex + 1][yIndex]);
-                    neighbours.push(balls[xIndex - 1][yIndex]);
-                } else {
-                    neighbours.push(balls[xIndex][yIndex - 1]);
-                    neighbours.push(balls[xIndex + 1][yIndex]);
-                    neighbours.push(balls[xIndex][yIndex + 1]);
-                    neighbours.push(balls[xIndex - 1][yIndex]);
+                let neighbours: Ball[] = [];
+
+                for (let offset of offsets) {
+                    try {
+                        let neighbour: Ball = balls[xIndex + offset[0]][yIndex + offset[1]];
+                        neighbours.push(neighbour);
+                    } catch (_error) {
+                    }
                 }
-                console.log("worked" + xIndex + "y: " + yIndex);
+                //console.log("worked" + xIndex + "y: " + yIndex);
                 balls[xIndex][yIndex].setNeighbours(neighbours);
             }
         }
@@ -134,7 +122,7 @@ namespace Cloth {
         offset = parseFloat(inputs[0].value);
         gravity.setXY(0, parseFloat(inputs[2].value));
         balls = [];
-        createBalls(20, 20);
+        createBalls(30,30);
         setNeighbours();
 
         if (_event.target == inputs[1]) {

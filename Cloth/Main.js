@@ -2,6 +2,7 @@ var Cloth;
 (function (Cloth) {
     const timeSliceInMS = 1;
     var Vector2D = Vector.Vector2D;
+    let offset;
     Cloth.gravity = new Vector2D(0, 0);
     let animation = false;
     window.addEventListener("load", init);
@@ -50,44 +51,27 @@ var Cloth;
                 else {
                     fixed = false;
                 }
-                tempBall = new Cloth.Ball(xIndex * Cloth.offset, yIndex * Cloth.offset, _amountX / canvas.width * (Cloth.offset * 10), fixed);
+                tempBall = new Cloth.Ball(xIndex * offset, yIndex * offset, _amountX / canvas.width * (offset * 10), fixed);
                 ballsCol.push(tempBall);
                 balls.push(ballsCol);
             }
         }
     }
     function setNeighbours() {
-        let neighbours = [];
-        for (let xIndex = 0; xIndex < 20; xIndex++) {
+        let offsets = [[0, -1], [1, 0], [0, -1], [-1, 0]];
+        for (let xIndex = 0; xIndex < balls.length; xIndex++) {
             let ballsCol = [];
             for (let yIndex = 0; yIndex < balls[0].length; yIndex++) {
-                if (xIndex == 0) {
-                    neighbours.push(balls[xIndex][yIndex - 1]);
-                    neighbours.push(balls[xIndex + 1][yIndex]);
-                    neighbours.push(balls[xIndex][yIndex + 1]);
+                let neighbours = [];
+                for (let offset of offsets) {
+                    try {
+                        let neighbour = balls[xIndex + offset[0]][yIndex + offset[1]];
+                        neighbours.push(neighbour);
+                    }
+                    catch (_error) {
+                    }
                 }
-                else if (xIndex == balls.length) {
-                    neighbours.push(balls[xIndex][yIndex - 1]);
-                    neighbours.push(balls[xIndex][yIndex + 1]);
-                    neighbours.push(balls[xIndex - 1][yIndex]);
-                }
-                else if (yIndex == 0) {
-                    neighbours.push(balls[xIndex + 1][yIndex]);
-                    neighbours.push(balls[xIndex][yIndex + 1]);
-                    neighbours.push(balls[xIndex - 1][yIndex]);
-                }
-                else if (yIndex == balls[0].length) {
-                    neighbours.push(balls[xIndex][yIndex - 1]);
-                    neighbours.push(balls[xIndex + 1][yIndex]);
-                    neighbours.push(balls[xIndex - 1][yIndex]);
-                }
-                else {
-                    neighbours.push(balls[xIndex][yIndex - 1]);
-                    neighbours.push(balls[xIndex + 1][yIndex]);
-                    neighbours.push(balls[xIndex][yIndex + 1]);
-                    neighbours.push(balls[xIndex - 1][yIndex]);
-                }
-                console.log("worked" + xIndex + "y: " + yIndex);
+                //console.log("worked" + xIndex + "y: " + yIndex);
                 balls[xIndex][yIndex].setNeighbours(neighbours);
             }
         }
@@ -119,10 +103,10 @@ var Cloth;
     }
     function handleInput(_event) {
         let inputs = document.querySelectorAll("input");
-        Cloth.offset = parseFloat(inputs[0].value);
+        offset = parseFloat(inputs[0].value);
         Cloth.gravity.setXY(0, parseFloat(inputs[2].value));
         balls = [];
-        createBalls(20, 20);
+        createBalls(30, 30);
         setNeighbours();
         if (_event.target == inputs[1]) {
             animation = inputs[1].checked;

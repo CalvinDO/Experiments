@@ -4,7 +4,7 @@ namespace Cloth {
         public position: V2 = new V2(0, 0);
         public speed: V2 = new V2(0, 0);
         public accels: V2[] = [];
-        public resultAcc: V2 = new V2(0, 0);
+        public resultAcc: V2;
         public radius: number;
         public color: string = "black";
         public fixed: boolean;
@@ -31,14 +31,21 @@ namespace Cloth {
         }
 
         calculate(): void {
+            this.resultAcc = new V2(0, 0);
             if (!this.fixed) {
-                for (let accIndex: number = 0; accIndex < this.neighbours.length; accIndex++) {
-                    let currentPull: V2 = new V2(this.neighbours[accIndex].position.x - this.position.x, this.neighbours[accIndex].position.y - this.position.y);
-                    this.accels.push(currentPull);
-                    this.resultAcc.add(this.accels[accIndex]);
-                }
-                this.resultAcc.add(gravity);
+                try {
+                    for (let accIndex: number = 0; accIndex < this.neighbours.length; accIndex++) {
+                        //t negatedNeighPos: V2 = this.neighbours[accIndex].position.getDiff;
+                        //negatedNeighPos.scale(-1);
+                        let currentPull: V2 = this.neighbours[accIndex].position.getDiff(this.position);
+                        this.accels.push(currentPull);
+                        this.resultAcc.add(this.accels[accIndex]);
+                    }
+                } catch (_error) {
 
+                }
+                console.log(this.resultAcc);
+                this.resultAcc.add(gravity);
                 this.speed.add(this.resultAcc);
             }
         }

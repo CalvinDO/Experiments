@@ -6,7 +6,6 @@ var Cloth;
             this.position = new V2(0, 0);
             this.speed = new V2(0, 0);
             this.accels = [];
-            this.resultAcc = new V2(0, 0);
             this.color = "black";
             this.position.setXY(_x, _y);
             this.radius = _r;
@@ -25,12 +24,20 @@ var Cloth;
             this.neighbours = _n;
         }
         calculate() {
+            this.resultAcc = new V2(0, 0);
             if (!this.fixed) {
-                for (let accIndex = 0; accIndex < this.neighbours.length; accIndex++) {
-                    let currentPull = new V2(this.neighbours[accIndex].position.x - this.position.x, this.neighbours[accIndex].position.y - this.position.y);
-                    this.accels.push(currentPull);
-                    this.resultAcc.add(this.accels[accIndex]);
+                try {
+                    for (let accIndex = 0; accIndex < this.neighbours.length; accIndex++) {
+                        //t negatedNeighPos: V2 = this.neighbours[accIndex].position.getDiff;
+                        //negatedNeighPos.scale(-1);
+                        let currentPull = this.neighbours[accIndex].position.getDiff(this.position);
+                        this.accels.push(currentPull);
+                        this.resultAcc.add(this.accels[accIndex]);
+                    }
                 }
+                catch (_error) {
+                }
+                console.log(this.resultAcc);
                 this.resultAcc.add(Cloth.gravity);
                 this.speed.add(this.resultAcc);
             }
