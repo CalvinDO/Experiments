@@ -42,7 +42,7 @@ namespace Cardioids {
             let endX: number = -Math.cos(endAngle) * radius;
             let endY: number = -Math.sin(endAngle) * radius;
 
-            drawLine(startX, startY, endX, endY, i * 1 / lines * 360 , width);
+            drawLine(startX, startY, endX, endY, i * 1 / lines * 360, width);
             console.log(startAngle, endAngle, i, calcedNumber, endX, endY, lines, factor);
         }
 
@@ -69,7 +69,7 @@ namespace Cardioids {
             //draw small dots and numbers
             crc2.beginPath();
             crc2.strokeStyle = "black";
-            crc2.arc(dotStartX, dotStartY, crc2.canvas.width/2 / (5 * _resolutionInput), 0, 2 * Math.PI, null);
+            crc2.arc(dotStartX, dotStartY, crc2.canvas.width / 2 / (5 * _resolutionInput), 0, 2 * Math.PI, null);
             crc2.fill();
 
             if (_resolutionInput <= 30) {
