@@ -22,7 +22,7 @@ namespace UXD {
     let inputTheta: number;
 
 
-    //window.addEventListener("load", init);
+    window.addEventListener("load", init);
 
     function init(_event: Event): void {
         body = document.querySelector("body");
@@ -32,9 +32,7 @@ namespace UXD {
 
         drawAndLoadImage();
         //drawTestDot();
-
-        console.log(calcFromSpherical(toRad(inputPhi), toRad(inputTheta)));
-        console.log(toRad(inputTheta));
+        console.log(canvas);
     }
 
     function generateCanvas(): void {
@@ -58,10 +56,15 @@ namespace UXD {
     function drawAndLoadImage(): void {
         crc2.drawImage(img, 0, 0);
         imgData = crc2.getImageData(0, 0, img.width, img.height).data;
-        crc2.clearRect(0, 0, canvas.width, canvas.height);
+        //crc2.clearRect(0, 0, canvas.width, canvas.height);
 
-        for (let index: number = 0; index < imgData.length; index += 4) {
-            drawPixel((index / 4) % img.width, (index / 4) / img.width, imgData[index], imgData[index + 1], imgData[index + 2], imgData[index + 3]);
+        let xPos: number;
+        let yPos: number;
+        console.log(imgData);
+        for (let index: number = 0; index < imgData.length / 1000; index += 4) {
+            xPos = (index / 4) % img.width;
+            yPos = (index / 4) / img.width;
+            drawPixel(xPos, yPos, imgData[index], imgData[index + 1], imgData[index + 2], imgData[index + 3]);
         }
     }
 
@@ -81,6 +84,8 @@ namespace UXD {
         crc2.stroke();
         crc2.fill();
     }
+
+
     function calcFromSpherical(_phi: number, _theta: number): V2 {
         cosC = Math.sin(phi1) * Math.sin(_phi) + Math.cos(phi1) * Math.cos(_phi) * Math.cos(_theta - theta0);
 

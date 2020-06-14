@@ -15,15 +15,14 @@ var UXD;
     let theta0 = 0;
     let inputPhi;
     let inputTheta;
-    //window.addEventListener("load", init);
+    window.addEventListener("load", init);
     function init(_event) {
         body = document.querySelector("body");
         generateImage();
         generateCanvas();
         drawAndLoadImage();
         //drawTestDot();
-        console.log(calcFromSpherical(toRad(inputPhi), toRad(inputTheta)));
-        console.log(toRad(inputTheta));
+        console.log(canvas);
     }
     function generateCanvas() {
         canvas = document.createElement("canvas");
@@ -42,9 +41,14 @@ var UXD;
     function drawAndLoadImage() {
         crc2.drawImage(img, 0, 0);
         imgData = crc2.getImageData(0, 0, img.width, img.height).data;
-        crc2.clearRect(0, 0, canvas.width, canvas.height);
-        for (let index = 0; index < imgData.length; index += 4) {
-            drawPixel((index / 4) % img.width, (index / 4) / img.width, imgData[index], imgData[index + 1], imgData[index + 2], imgData[index + 3]);
+        //crc2.clearRect(0, 0, canvas.width, canvas.height);
+        let xPos;
+        let yPos;
+        console.log(imgData);
+        for (let index = 0; index < imgData.length / 1000; index += 4) {
+            xPos = (index / 4) % img.width;
+            yPos = (index / 4) / img.width;
+            drawPixel(xPos, yPos, imgData[index], imgData[index + 1], imgData[index + 2], imgData[index + 3]);
         }
     }
     function drawPixel(_x, _y, _r, _g, _b, _a) {
