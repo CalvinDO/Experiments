@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "sourceMap": true
+        "module": "ES6",
+        "target": "ESNext",
+        "sourceMap": true,
+        "esModuleInterop": true 
     },
     "exclude": [
         "node_modules"
