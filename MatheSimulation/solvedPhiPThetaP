@@ -1,0 +1,2 @@
+\phi_{ p } = -tan^{ -1 }\left( -s_{ 1 } * sin\left( \alpha \right) \right)
+\theta_{ p } = - tan^{ -1 }\left( s_{ 1 } * cos\left( \alpha \right) * cos\left( \phi_{ p } \right) \right)

@@ -1,0 +1,1 @@
+\cvect{ -tan\left( \phi_{ p } \right) }{ -\frac{ tan\left( \theta_{ p } \right) }{ cos\left( \phi_{ p } \right) } } = \cvect{O'E'_{ x }}{ O'E'_{ y } }
