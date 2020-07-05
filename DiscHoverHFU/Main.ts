@@ -36,7 +36,7 @@ let scene = new Scene();
 let renderView = null;
 
 scene.addNode(new SkyboxNode({
-    url: "media/textures/testEquirectangular.jpg"
+    url: "media/textures/studio.png"
 }));
 
 function init(_event: Event): void {
@@ -68,6 +68,7 @@ function onClickBody(_event: MouseEvent): void {
       */
     // console.log(renderView.projectionMatrix);
     // console.log(renderView.viewMatrix);
+    /*
     let posClient: Vector2D = new Vector2D(
         inlineViewerHelper.lookYaw,
         inlineViewerHelper.lookPitch
@@ -78,6 +79,27 @@ function onClickBody(_event: MouseEvent): void {
         new Matrix4D(Array.from(renderView.viewMatrix)),
         posClient);
     console.log(projected.xyz);
+*/
+    let yaw: number = (inlineViewerHelper.lookYaw / Math.PI) * 180;
+    let pitch: number = (inlineViewerHelper.lookPitch / Math.PI) * 180;
+    checkClickLocation(yaw, pitch);
+}
+
+function checkClickLocation(_yaw: number, _pitch: number): void {
+    let destYaw: number= 20;
+    let destPitch: number = 30;
+
+    let tolerance: number = 3;
+    let hit: boolean = true;
+
+    if (_yaw < destYaw - tolerance || _yaw > destYaw + tolerance){
+        hit = false; 
+    }
+    if (_pitch < destPitch - tolerance || _pitch > destPitch + tolerance){
+        hit = false; 
+    }
+    console.log(_yaw, _pitch);
+    console.log("Hit? " + hit + " !");
 }
 
 function project(_projMatrix: Matrix4D, _viewMatrix: Matrix4D, _pos2D: Vector2D): Vector3D {

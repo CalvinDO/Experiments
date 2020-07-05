@@ -3,9 +3,7 @@ import { Renderer, createWebGLContext } from "./js/render/core/renderer.js";
 import { SkyboxNode } from "./js/render/nodes/skybox.js";
 import { InlineViewerHelper } from "./js/util/inline-viewer-helper.js";
 import { QueryArgs } from "./js/util/query-args.js";
-var Vector2D = Vector.Vector2D;
 var Vector3D = Vector.Vector3D;
-var Matrix4D = Matrix.Matrix4D;
 import WebXRPolyfill from "./js/third-party/webxr-polyfill/build/webxr-polyfill.module.js";
 window.addEventListener("load", init);
 // If requested, use the polyfill to provide support for mobile devices
@@ -23,7 +21,7 @@ let renderer = null;
 let scene = new Scene();
 let renderView = null;
 scene.addNode(new SkyboxNode({
-    url: "media/textures/testEquirectangular.jpg"
+    url: "media/textures/studio.png"
 }));
 function init(_event) {
     // Start the XR application.
@@ -53,10 +51,35 @@ function onClickBody(_event) {
       */
     // console.log(renderView.projectionMatrix);
     // console.log(renderView.viewMatrix);
-    let posClient = new Vector2D(inlineViewerHelper.lookYaw, inlineViewerHelper.lookPitch);
+    /*
+    let posClient: Vector2D = new Vector2D(
+        inlineViewerHelper.lookYaw,
+        inlineViewerHelper.lookPitch
+    );
     console.log(posClient);
-    let projected = project(new Matrix4D(Array.from(renderView.projectionMatrix)), new Matrix4D(Array.from(renderView.viewMatrix)), posClient);
+    let projected: Vector3D = project(
+        new Matrix4D(Array.from(renderView.projectionMatrix)),
+        new Matrix4D(Array.from(renderView.viewMatrix)),
+        posClient);
     console.log(projected.xyz);
+*/
+    let yaw = (inlineViewerHelper.lookYaw / Math.PI) * 180;
+    let pitch = (inlineViewerHelper.lookPitch / Math.PI) * 180;
+    checkClickLocation(yaw, pitch);
+}
+function checkClickLocation(_yaw, _pitch) {
+    let destYaw = 20;
+    let destPitch = 30;
+    let tolerance = 3;
+    let hit = true;
+    if (_yaw < destYaw - tolerance || _yaw > destYaw + tolerance) {
+        hit = false;
+    }
+    if (_pitch < destPitch - tolerance || _pitch > destPitch + tolerance) {
+        hit = false;
+    }
+    console.log(_yaw, _pitch);
+    console.log("Hit? " + hit + " !");
 }
 function project(_projMatrix, _viewMatrix, _pos2D) {
     let projInv = _projMatrix.inverse();
