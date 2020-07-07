@@ -181,8 +181,8 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 	public static int staticHeight = Constants.WINDOW_HEIGHT;
 	public static boolean programActive = false;
 
-	public static double s1 = 1f / Math.sqrt(2f);
-	// public static double s1 = 0.4271067811865472;
+	//public static double s1 = 1f / Math.sqrt(2f);
+	public static double s1 = 0.4271067811865472;
 	public static double alpha = 135;
 	public static double alphaRad;
 
