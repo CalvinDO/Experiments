@@ -76,9 +76,6 @@ public class Main {
 		int secondaryHeight = 34;
 		int secondaryFontSize = 15;
 
-		showPUN = new JButton("Show PUN");
-		styleSecondaryButton(showPUN, secondaryWidth, secondaryHeight, secondaryFontSize, mainPanel);
-		
 		xVectorDisplay = generateDisplayLabel("xVector", 20);
 		mainPanel.add(xVectorDisplay);
 
@@ -110,10 +107,6 @@ public class Main {
 
 		yVectorDisplay = generateDisplayLabel("yVector", 20);
 		mainPanel.add(yVectorDisplay);
-		
-		showPUCombination = new JButton("Show PU ");
-		styleSecondaryButton(showPUCombination, secondaryWidth, secondaryHeight, secondaryFontSize, mainPanel);
-		
 		frame.add(mainPanel);
 		frame.pack();
 		frame.setVisible(true);
@@ -244,23 +237,6 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 		if (e.getSource() == Main.secondarys.get(3)) {
 			alpha -= Constants.alphaIncrease;
 		}
-		
-		if (e.getSource() == Main.showPUN) {
-			if (showPUNVisualization) {
-				showPUNVisualization = false;
-			} else {
-				showPUNVisualization = true;
-			}
-		}
-		
-		if (e.getSource() == Main.showPUCombination) {
-			if (showPUCombination) {
-				showPUCombination = false;
-			} else {
-				showPUCombination = true;
-			}
-		}
-		
 		System.out.println(alpha);
 		System.out.println(s1);
 	}

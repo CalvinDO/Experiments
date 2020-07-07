@@ -105,9 +105,9 @@ public class KugelKoords {
 	}
 
 	public static void visualizePUN(Graphics _g, Vector _p, Vector _pDach, Vector _uDach, Vector _nDach) {
-//		_pDach.times(Constants.scale / 3).draw(_g, Color.RED, 3);
-//		_uDach.times(Constants.scale / 3).draw(_g, Color.GREEN, 3);
-//		_nDach.times(Constants.scale / 3).draw(_g, Color.BLUE, 3);
+		_pDach.times(Constants.scale / 3).draw(_g, Color.RED, 3);
+		_uDach.times(Constants.scale / 3).draw(_g, Color.GREEN, 3);
+		_nDach.times(Constants.scale / 3).draw(_g, Color.BLUE, 3);
 		
 		_p.getProjected().drawConnectionTo(_g, Color.RED, 4,
 				_pDach.times(Constants.scale / 4).getAdded(_p).getProjected());
@@ -122,6 +122,8 @@ public class KugelKoords {
 		multipliedPDach.draw(_g, Color.RED, 8);
 		Vector multipliedUDach = _uDach.times(r * Math.sin(currentDelta));
 		multipliedPDach.getProjected().drawConnectionTo(_g, Color.GREEN, 5, multipliedPDach.getAdded(multipliedUDach).getProjected());
+		
+		_uDach.times(Constants.scale).draw(_g, Color.GREEN, 3);
 	}
 
 	public static void drawRotatedEquatorPart(Graphics _g, Color _color, double _delta, Matrix _drehMatrix,

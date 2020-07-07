@@ -122,6 +122,8 @@ public class KugelKoords {
 		multipliedPDach.draw(_g, Color.RED, 8);
 		Vector multipliedUDach = _uDach.times(r * Math.sin(currentDelta));
 		multipliedPDach.getProjected().drawConnectionTo(_g, Color.GREEN, 5, multipliedPDach.getAdded(multipliedUDach).getProjected());
+		
+		_uDach.times(Constants.scale).draw(_g, Color.GREEN, 3);
 	}
 
 	public static void drawRotatedEquatorPart(Graphics _g, Color _color, double _delta, Matrix _drehMatrix,

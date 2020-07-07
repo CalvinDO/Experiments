@@ -253,11 +253,11 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 			}
 		}
 		
-		if (e.getSource() == Main.showPUCombination) {
-			if (showPUCombination) {
-				showPUCombination = false;
+		if (e.getSource() == Main.showPUN) {
+			if (showPUNVisualization) {
+				showPUNVisualization = false;
 			} else {
-				showPUCombination = true;
+				showPUNVisualization = true;
 			}
 		}
 		
