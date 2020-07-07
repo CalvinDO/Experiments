@@ -1,0 +1,213 @@
+package Gruppe4;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
+
+public class KugelKoords {
+	public static double r = Constants.scale;
+	public static double res = Constants.resolution;
+	public static double theta;
+	public static double phi;
+	public static double currentDelta;
+
+	public static double[][] KugelArray;
+	public static Matrix KugelMatrix;
+	public static Matrix projected;
+
+	public static Vector oldPos;
+	public static Vector newPos;
+	public static Vector firstPos;
+
+	public static double time;
+
+	public static void setTime(double _time) {
+		time = _time;
+	}
+
+	public static Vector getSphericalCoordVector(double _phi, double _theta) {
+		double x = r * Math.cos(theta) * Math.cos(phi);
+		double y = r * Math.cos(theta) * Math.sin(phi);
+		double z = r * Math.sin(theta);
+		return (new Vector(x, y, z));
+	}
+
+	public static void drawBreitenGrad(Graphics _g, Color _color, double _angle) {
+		firstPos = oldPos = newPos;
+		theta = _angle;
+		
+		for (int resIndex = 0; resIndex <= res; resIndex++) {
+			phi = resIndex / res * 2 * Math.PI;
+			
+			KugelMatrix = getSphericalCoordVector(phi, theta).getMatrix();
+			projected = YourGraphicsContent.projMatrix.times(KugelMatrix);
+			
+			newPos = new Vector(projected.getX(), projected.getY());
+
+			_g.setColor(_color);
+			Graphics2D g2 = (Graphics2D) _g;
+			g2.setStroke(new BasicStroke(1));
+			
+			g2.drawLine((int) oldPos.getX(), (int) oldPos.getY(), (int) newPos.getX(), (int) newPos.getY());
+			oldPos = newPos;
+		}
+		_g.drawLine((int) oldPos.getX(), (int) oldPos.getY(), (int) firstPos.getX(), (int) firstPos.getY());
+	}
+
+	public static void drawLängenGrad(Graphics _g, Color _color, double _angle) {
+		phi = _angle;
+		for (int resIndex = 0; resIndex <= res; resIndex++) {
+			theta = resIndex / res * 2 * Math.PI;
+			KugelArray = new double[][] { { r * Math.cos(theta) * Math.cos(phi) },
+					{ r * Math.cos(theta) * Math.sin(phi) }, { r * Math.sin(theta) }, { 1 } };
+			KugelMatrix = new Matrix(KugelArray);
+			projected = YourGraphicsContent.projMatrix.times(KugelMatrix);
+
+			newPos = new Vector(projected.getX(), projected.getY(), 1);
+
+			if (resIndex == 0) {
+				oldPos = newPos;
+			}
+
+			_g.setColor(_color);
+			Graphics2D g2 = (Graphics2D) _g;
+			g2.setStroke(new BasicStroke(1));
+			g2.drawLine((int) oldPos.getX(), (int) oldPos.getY(), (int) newPos.getX(), (int) newPos.getY());
+			oldPos = newPos;
+		}
+	}
+
+	public static void drawBeautyLängenGrad(Graphics _g, Color _color, double _angle) {
+		phi = _angle;
+		for (int resIndex = 0; resIndex <= res; resIndex++) {
+			theta = resIndex / res * Math.PI;
+			theta -= Math.PI / 2;
+
+			KugelArray = new double[][] { { r * Math.cos(theta) * Math.cos(phi) },
+					{ r * Math.cos(theta) * Math.sin(phi) }, { r * Math.sin(theta) }, { 1 } };
+			KugelMatrix = new Matrix(KugelArray);
+			projected = YourGraphicsContent.projMatrix.times(KugelMatrix);
+
+			newPos = new Vector(projected.getX(), projected.getY(), 1);
+
+			if (resIndex == 0) {
+				oldPos = newPos;
+			}
+			_g.setColor(_color);
+			Graphics2D g2 = (Graphics2D) _g;
+			g2.setStroke(new BasicStroke(1));
+			g2.drawLine((int) oldPos.getX(), (int) oldPos.getY(), (int) newPos.getX(), (int) newPos.getY());
+			oldPos = newPos;
+		}
+	}
+
+	public static void drawOutline(Graphics _g, Color _color) {
+
+		double s1 = YourGraphicsContent.s1;
+		double alpha = Math.toRadians(YourGraphicsContent.alpha);
+
+		double phiP = -Math.atan(-s1 * Math.sin(alpha));
+		double thetaP = -Math.atan(s1 * Math.cos(alpha) * Math.cos(phiP));
+
+		double[][] rotateY;
+		double[][] rotateZ;
+
+		Matrix rotateYMatrix;
+		Matrix rotateZMatrix;
+
+		phi = Math.PI / 2;
+		for (int resIndex = 0; resIndex <= res; resIndex++) {
+			theta = resIndex / res * 2 * Math.PI;
+			theta -= Math.PI / 2;
+
+			KugelArray = new double[][] { { r * Math.cos(theta) * Math.cos(phi) },
+					{ r * Math.cos(theta) * Math.sin(phi) }, { r * Math.sin(theta) }, { 1 } };
+			KugelMatrix = new Matrix(KugelArray);
+
+			rotateY = new double[][] { { Math.cos(thetaP), 0, -Math.sin(thetaP), 0 }, { 0, 1, 0, 0 },
+					{ Math.sin(thetaP), 0, Math.cos(thetaP), 0 }, { 0, 0, 0, 1 } };
+
+			rotateZ = new double[][] { { Math.cos(phiP), -Math.sin(phiP), 0, 0 },
+					{ Math.sin(phiP), Math.cos(phiP), 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
+
+			rotateYMatrix = new Matrix(rotateY);
+			rotateZMatrix = new Matrix(rotateZ);
+
+			projected = YourGraphicsContent.projMatrix.times(rotateZMatrix.times(rotateYMatrix.times(KugelMatrix)));
+
+			newPos = new Vector(projected.getX(), projected.getY(), 1);
+
+			if (resIndex == 0) {
+				oldPos = newPos;
+			}
+			_g.setColor(_color);
+			Graphics2D g2 = (Graphics2D) _g;
+			g2.setStroke(new BasicStroke(3));
+			g2.drawLine((int) oldPos.getX(), (int) oldPos.getY(), (int) newPos.getX(), (int) newPos.getY());
+
+			oldPos = newPos;
+		}
+	}
+
+	public static double distanceOnCircle(double _delta) {
+		return r * _delta;
+	}
+
+	public static void drawGeodesic(Graphics _g, Color _color, Vector _p, Vector _q, OBJReader _meshObject) {
+		double delta = _p.angleRad(_q);
+
+		if (time <= Constants.maxTime) {
+			currentDelta = delta * time / Constants.maxTime;
+		}
+
+		Vector pDach = _p.normalize();
+		Vector nDach = _p.kreuzprodukt(_q).normalize();
+		Vector uDach = nDach.kreuzprodukt(pDach).normalize();
+
+		double[][] drehungArray = new double[][] { { pDach.getX(), uDach.getX(), nDach.getX(), 0 },
+				{ pDach.getY(), uDach.getY(), nDach.getY(), 0 }, { pDach.getZ(), uDach.getZ(), nDach.getZ(), 0 },
+				{ 0, 0, 0, 1 } };
+		Matrix drehung = new Matrix(drehungArray);
+		drawRotatedEquatorPart(_g, _color, currentDelta, drehung, _meshObject, _q);
+	}
+
+	public static void drawRotatedEquatorPart(Graphics _g, Color _color, double _delta, Matrix _drehMatrix,
+			OBJReader _meshObject, Vector _goal) {
+		theta = 0;
+		for (int resIndex = 0; resIndex <= res; resIndex++) {
+			phi = resIndex / res * _delta;
+			KugelArray = new double[][] { { r * Math.cos(theta) * Math.cos(phi) },
+					{ r * Math.cos(theta) * Math.sin(phi) }, { r * Math.sin(theta) }, { 1 } };
+			KugelMatrix = new Matrix(KugelArray);
+			projected = YourGraphicsContent.projMatrix.times(_drehMatrix.times(KugelMatrix));
+
+			newPos = new Vector(projected.getX(), projected.getY(), 1);
+
+			if (resIndex == 0) {
+				firstPos = newPos;
+				oldPos = newPos;
+			}
+			_g.setColor(_color);
+			Graphics2D g2 = (Graphics2D) _g;
+			g2.setStroke(new BasicStroke(4));
+			g2.drawLine((int) oldPos.getX(), (int) oldPos.getY(), (int) newPos.getX(), (int) newPos.getY());
+			oldPos = newPos;
+		}
+		Matrix lastPos = _drehMatrix.times(KugelMatrix);
+		Vector airplanePos = new Vector(lastPos.getX(), lastPos.getY(), lastPos.getZ());
+
+		Vector pDach = airplanePos.normalize();
+		Vector nDach = airplanePos.kreuzprodukt(_goal).normalize();
+		Vector uDach = nDach.kreuzprodukt(pDach).normalize();
+
+		double[][] drehungArray = new double[][] { { pDach.getX(), uDach.getX(), nDach.getX(), 0 },
+				{ pDach.getY(), uDach.getY(), nDach.getY(), 0 }, { pDach.getZ(), uDach.getZ(), nDach.getZ(), 0 },
+				{ 0, 0, 0, 1 } };
+		Matrix drehung = new Matrix(drehungArray);
+
+		// _meshObject.drawTranslatedRotated(_g, Color.PINK, 2, Constants.E1, drehung);
+		_meshObject.drawTransRotFaces(_g, Color.GREEN, Color.WHITE, 127, Constants.E1, drehung);
+	}
+}

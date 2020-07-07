@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+T:\Calvin\Studium\JavaRestrictedProgramming\MathSim\.metadata\.plugins\org.eclipse.jdt.core
+1671692264.index
+1989433996.index
+3000679057.index

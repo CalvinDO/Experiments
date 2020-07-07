@@ -1,0 +1,315 @@
+package Gruppe4;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import utils.ApplicationTime;
+import utils.FrameUpdate;
+
+import java.util.ArrayList;
+import java.util.Timer;
+
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Frame;
+
+public class Main {
+
+	private static JFrame frame;
+
+	public static JButton buttonUp;
+	public static JButton buttonDown;
+	public static JButton buttonStart;
+	public static JButton alphaUp;
+	public static JButton alphaDown;
+
+	public static JLabel alphaDisplay;
+	public static JLabel sDisplay;
+
+	public static JLabel xVectorDisplay;
+	public static JLabel yVectorDisplay;
+	
+	public static Color turquoise = HSLColor.toRGB(174, 97, 43);
+	public static Color blue = HSLColor.toRGB(258, 100, 35);
+
+	public static Color red = HSLColor.toRGB(349, 52, 61);
+	public static Color pink = HSLColor.toRGB(267, 95, 76);
+
+	public static ArrayList<JButton> secondarys;
+
+	public static void main(String[] args) {
+
+		ApplicationTime animThread = new ApplicationTime();
+		animThread.start();
+
+		CreateFrame(animThread);
+
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new FrameUpdate(frame), 100, Constants.TPF);
+	}
+
+	private static void CreateFrame(ApplicationTime thread) {
+
+		frame = new JFrame("Mathematik und Simulation");
+
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		JPanel mainPanel = new YourGraphicsContent(thread);
+
+		int startWidth = 130;
+		int startHeight = 50;
+		int startFontSize = 28;
+
+		int secondaryWidth = 130;
+		int secondaryHeight = 34;
+		int secondaryFontSize = 15;
+
+		xVectorDisplay = generateDisplayLabel("xVector", 30);
+		mainPanel.add(xVectorDisplay);
+		
+		sDisplay = generateDisplayLabel("s1", 40);
+		mainPanel.add(sDisplay);
+
+		secondarys = new ArrayList<JButton>();
+
+		buttonUp = new JButton("s1 += " + Constants.increaseRate);
+		buttonDown = new JButton("s2 +=" + Constants.increaseRate);
+		alphaUp = new JButton("alpha += " + Constants.alphaIncrease);
+		alphaDown = new JButton("alpha -= " + Constants.alphaIncrease);
+
+		secondarys.add(buttonUp);
+		secondarys.add(buttonDown);
+		secondarys.add(alphaUp);
+		secondarys.add(alphaDown);
+
+		for (int index = 0; index < secondarys.size(); index++) {
+			if (index == secondarys.size() / 2) {
+				generateStartButton(startWidth, startHeight, startFontSize, mainPanel);
+			}
+			JButton currentButton = secondarys.get(index);
+			styleSecondaryButton(currentButton, secondaryWidth, secondaryHeight, secondaryFontSize, mainPanel);
+		}
+
+		alphaDisplay = generateDisplayLabel("alpha", 40);
+		mainPanel.add(alphaDisplay);
+
+		yVectorDisplay = generateDisplayLabel("yVector", 30)
+		mainPanel.add(generateDisplayLabel("           ", 40));
+		frame.add(mainPanel);
+		frame.pack();
+		frame.setVisible(true);
+	}
+
+	private static JLabel generateDisplayLabel(String _displayText, int _fontSize) {
+		JLabel output = new JLabel(_displayText);
+		output.setFont(new Font("Arial", Font.PLAIN, _fontSize));
+		output.setOpaque(true);
+		output.setBackground(blue);
+		output.setForeground(turquoise);
+		return output;
+	}
+
+	private static void generateStartButton(int _width, int _height, int _fontSize, JPanel _panel) {
+		buttonStart = new JButton("START");
+		buttonStart.setFont(new Font("Arial", Font.PLAIN, _fontSize));
+		buttonStart.setPreferredSize(new Dimension(_width, _height));
+		buttonStart.setBackground(turquoise);
+		buttonStart.setForeground(blue);
+		buttonStart.setFocusPainted(false);
+		buttonStart.setBorder(BorderFactory.createLineBorder(blue));
+		buttonStart.setLocation(new Point(Constants.WINDOW_WIDTH / 2, 0));
+		_panel.add(buttonStart);
+		buttonStart.addActionListener((ActionListener) _panel);
+	}
+
+	private static void styleSecondaryButton(JButton _inputButton, int _width, int _height, int _fontSize,
+			JPanel _panel) {
+		_inputButton.setFont(new Font("Arial", Font.PLAIN, _fontSize));
+		_inputButton.setPreferredSize(new Dimension(_width, _height));
+		_inputButton.setBackground(blue);
+		_inputButton.setForeground(turquoise);
+		_inputButton.setBorder(BorderFactory.createLineBorder(turquoise));
+		_inputButton.setFocusPainted(false);
+		_panel.add(_inputButton);
+		_inputButton.addActionListener((ActionListener) _panel);
+	}
+
+	public static JFrame getFrame() {
+		return frame;
+	}
+}
+
+@SuppressWarnings("serial")
+class YourGraphicsContent extends JPanel implements ActionListener {
+
+	// panel has a single time tracking thread associated with it
+	private ApplicationTime t;
+	private double time;
+
+	public YourGraphicsContent(ApplicationTime thread) {
+		this.t = thread;
+	}
+
+	// set this panel's preferred size for auto-sizing the container JFrame
+	public Dimension getPreferredSize() {
+		return new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+	}
+
+	public int width = Constants.WINDOW_WIDTH;
+	public int height = Constants.WINDOW_HEIGHT;
+	public static int staticWidth = Constants.WINDOW_WIDTH;
+	public static int staticHeight = Constants.WINDOW_HEIGHT;
+	public static boolean programActive = false;
+
+	public static double s1 = 1f / Math.sqrt(2f);
+	//public static double s1 = 0.4271067811865472;
+	public static double alpha = 135;
+	public static double alphaRad;
+
+	public static double[][] projArray;
+	public static Matrix projMatrix;
+
+	public static double r = Constants.scale;
+	public static double phi = Math.toRadians(10);
+	public static double theta = Math.toRadians(75);
+	public static double phi2 = Math.toRadians(80);
+	public static double theta2 = Math.toRadians(25);
+
+	public static Vector p = new Vector(r * Math.cos(theta) * Math.cos(phi), r * Math.cos(theta) * Math.sin(phi),
+			r * Math.sin(theta));
+	public static Vector q = new Vector(r * Math.cos(theta2) * Math.cos(phi2), r * Math.cos(theta2) * Math.sin(phi2),
+			r * Math.sin(theta2));
+
+	double objectStartRotY = Math.toRadians(90);
+
+	double[][] y90 = new double[][] { { Math.cos(objectStartRotY), 0, Math.sin(objectStartRotY), 0 }, { 0, 1, 0, 0 },
+			{ -Math.sin(objectStartRotY), 0, Math.cos(objectStartRotY), 0 }, { 0, 0, 0, 1 } };
+
+	Matrix yRotMatrix = new Matrix(y90);
+
+	OBJReader meshObject = new OBJReader("T:\\Calvin\\Blender\\OBJ\\Flugzeug.obj", 0.02, yRotMatrix);
+
+	public void actionPerformed(ActionEvent e) {
+
+		if (e.getSource() == Main.buttonStart) {
+			if (programActive) {
+				programActive = false;
+				Main.buttonStart.setText("START");
+				Main.buttonStart.setForeground(Main.blue);
+				Main.buttonStart.setBackground(Main.turquoise);
+				Main.buttonStart.setBorder(BorderFactory.createLineBorder(Main.blue));
+			} else {
+				programActive = true;
+				Main.buttonStart.setText("STOP");
+				Main.buttonStart.setForeground(Main.turquoise);
+				Main.buttonStart.setBackground(Main.red);
+				Main.buttonStart.setBorder(BorderFactory.createLineBorder(Main.pink));
+			}
+		}
+
+		if (e.getSource() == Main.secondarys.get(0)) {
+			s1 += Constants.increaseRate;
+		}
+		if (e.getSource() == Main.secondarys.get(1)) {
+			s1 -= Constants.increaseRate;
+		}
+
+		if (e.getSource() == Main.secondarys.get(2)) {
+			alpha += Constants.alphaIncrease;
+		}
+
+		if (e.getSource() == Main.secondarys.get(3)) {
+			alpha -= Constants.alphaIncrease;
+		}
+		System.out.println(alpha);
+		System.out.println(s1);
+	}
+
+	public static double roundAvoid(double value, int places) {
+		double scale = Math.pow(10, places);
+		return Math.round(value * scale) / scale;
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		if (!programActive) {
+			t.timeScale = 0;
+		} else {
+			t.timeScale = Constants.TIMESCALE;
+		}
+		
+		super.paintComponent(g);
+
+		time = t.GetTimeInSeconds();
+		alphaRad = Math.toRadians(alpha);
+
+		projArray = new double[][] { { -s1 * Math.sin(alphaRad), 1, 0, staticWidth / 2f },
+				{ -s1 * Math.cos(alphaRad), 0, -1, staticHeight / 2f } };
+		projMatrix = new Matrix(projArray);
+
+		//Visual Displays
+		Main.alphaDisplay.setText(alpha + "° ");
+		Main.sDisplay.setText(roundAvoid(s1, 3) + "");
+		Main.xVectorDisplay.setText("<html><body>E1'=" + 
+		roundAvoid(Constants.E1.getProjected().getX(), 2) + "<br>" + 
+		"....." + roundAvoid(Constants.E1.getProjected().getY(), 2) + "</body></html>");
+		//Main.xVectorDisplay.setLocation(new Point(20,100));
+		
+		KugelKoords.setTime(time);
+
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+
+		double hue;
+		float alpha;
+
+		Constants.E1.draw(g, Color.RED, 2);
+		Constants.E2.draw(g, Color.GREEN, 2);
+		Constants.E3.draw(g, Color.BLUE, 2);
+
+		for (float breitIndex = -90; breitIndex < 90; breitIndex += Constants.breitRes) {
+			hue = (breitIndex + 90) * 2;
+
+			if (breitIndex == 0) {
+				alpha = 1.0f;
+			} else {
+				alpha = 0.5f;
+			}
+			Color color = HSLColor.toRGB((float) hue, 100, 50, alpha);
+			KugelKoords.drawBreitenGrad(g, color, Math.toRadians(breitIndex));
+		}
+
+		for (float laengsIndex = 0; laengsIndex < 360; laengsIndex += Constants.laengsRes) {
+			hue = (laengsIndex + 90) * 2;
+			if (laengsIndex == 0) {
+				alpha = 1.0f;
+			} else {
+				alpha = 0.5f;
+			}
+			Color color = HSLColor.toRGB(laengsIndex, 100, 50, alpha);
+			KugelKoords.drawLängenGrad(g, color, Math.toRadians(laengsIndex));
+		}
+		KugelKoords.drawOutline(g, Color.GRAY);
+
+		KugelKoords.drawGeodesic(g, Color.WHITE, p, q, meshObject, true);
+
+		// Achtung: zur Visualisierung
+		/*
+		 * double delta = p.angleBetweenRad(q); Vector qFake =
+		 * KugelKoords.getVectorFromSpherical(delta, 0); System.out.println(delta);
+		 * KugelKoords.drawGeodesic(g, Color.CYAN, Constants.E1, qFake, meshObject,
+		 * false);
+		 */
+		p.draw(g, Color.PINK, 3);
+		q.draw(g, Color.YELLOW, 3);
+	}
+}

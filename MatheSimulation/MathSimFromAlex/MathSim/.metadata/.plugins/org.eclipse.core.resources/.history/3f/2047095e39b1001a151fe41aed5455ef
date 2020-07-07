@@ -1,0 +1,183 @@
+package Gruppe4;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import utils.ApplicationTime;
+import utils.FrameUpdate;
+import java.util.Timer;
+
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Dimension;
+
+public class Orthographic {
+
+	private static JFrame frame;
+	public static JButton buttonUp;
+	public static JButton buttonDown;
+	public static JButton buttonStart;
+	public static JButton alphaUp;
+	public static JButton alphaDown;
+
+	public static void main(String[] args) {
+		ApplicationTime animThread = new ApplicationTime();
+		animThread.start();
+		CreateFrame(animThread);
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new FrameUpdate(frame), 100, Constants.TPF);
+	}
+
+	private static void CreateFrame(ApplicationTime thread) {
+		frame = new JFrame("Orthographic Geodesic!");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JPanel panel = new YourGraphicsContent(thread);
+
+		buttonUp = new JButton("Add " + Constants.increaseRate + "to s1");
+		panel.add(buttonUp);
+		buttonUp.addActionListener((ActionListener) panel);
+
+		buttonDown = new JButton("Subtract " + Constants.increaseRate + "from s1");
+		panel.add(buttonDown);
+		buttonDown.addActionListener((ActionListener) panel);
+
+		buttonStart = new JButton("Start");
+		panel.add(buttonStart);
+		buttonStart.addActionListener((ActionListener) panel);
+
+		alphaUp = new JButton("Increase " + Constants.alphaIncreaseRate + "to alpha");
+		panel.add(alphaUp);
+		alphaUp.addActionListener((ActionListener) panel);
+
+		alphaDown = new JButton("Subtract " + Constants.alphaIncreaseRate + "from alpha");
+		panel.add(alphaDown);
+		alphaDown.addActionListener((ActionListener) panel);
+
+		frame.add(panel);
+		frame.pack(); // adjusts size of the JFrame to fit the size of it's components
+		frame.setVisible(true);
+	}
+}
+
+@SuppressWarnings("serial")
+class YourGraphicsContent extends JPanel implements ActionListener {
+
+	// panel has a single time tracking thread associated with it
+	private ApplicationTime t;
+	private double time;
+
+	public YourGraphicsContent(ApplicationTime thread) {
+		this.t = thread;
+	}
+
+	public Dimension getPreferredSize() {
+		return new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+	}
+
+	public int width = Constants.WINDOW_WIDTH;
+	public int height = Constants.WINDOW_HEIGHT;
+	public static int staticWidth = Constants.WINDOW_WIDTH;
+	public static int staticHeight = Constants.WINDOW_HEIGHT;
+	public static boolean programmActive = false;
+
+	public static double s1 = 1f / Math.sqrt(2f);
+	public static double alpha = 135;
+	public static double alphaRad;
+	
+	public static double[][] projArray;
+	public static Matrix projMatrix;
+
+	double objectStartRotY = Math.toRadians(90);
+	double[][] y90 = new double[][] { { Math.cos(objectStartRotY), 0, Math.sin(objectStartRotY), 0 }, { 0, 1, 0, 0 },
+			{ -Math.sin(objectStartRotY), 0, Math.cos(objectStartRotY), 0 }, { 0, 0, 0, 1 } };
+	Matrix yRotMatrix = new Matrix(y90);
+
+	public OBJReader meshObject = new OBJReader("T:\\Calvin\\Blender\\OBJ\\Flugzeug.obj", 0.08, yRotMatrix);
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == Orthographic.buttonStart) {
+			programmActive = true;
+		}
+		if (e.getSource() == Orthographic.buttonUp) {
+			s1 += Constants.increaseRate;
+		}
+		if (e.getSource() == Orthographic.buttonDown) {
+			s1 -= Constants.increaseRate;
+		}
+		if (e.getSource() == Orthographic.alphaUp) {
+			alpha += Constants.alphaIncreaseRate;
+		}
+		if (e.getSource() == Orthographic.alphaDown) {
+			alpha -= Constants.alphaIncreaseRate;
+		}
+	}
+
+	public static double r = Constants.scale;
+	public static double phi = Math.toRadians(300);
+	public static double theta = Math.toRadians(50);
+
+	public static double phi2 = Math.toRadians(180);
+	public static double theta2 = Math.toRadians(0);
+
+	public static Vector p = new Vector(r * Math.cos(theta) * Math.cos(phi), r * Math.cos(theta) * Math.sin(phi),
+			r * Math.sin(theta));
+	public static Vector q = new Vector(r * Math.cos(theta2) * Math.cos(phi2), r * Math.cos(theta2) * Math.sin(phi2),
+			r * Math.sin(theta2));
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		if (false) {
+			return;
+		}
+		super.paintComponent(g);
+		time = t.GetTimeInSeconds() * 10;
+		// alpha = time * 3;
+
+		alphaRad = Math.toRadians(alpha);
+
+		projArray = new double[][] { { -s1 * Math.sin(alphaRad), 1, 0, staticWidth / 2f },
+				{ -s1 * Math.cos(alphaRad), 0, -1, staticHeight / 2f } };
+		projMatrix = new Matrix(projArray);
+
+		KugelKoords.setTime(time);
+
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, width, height);
+
+		Constants.O.drawFromCenter(g, Color.RED);
+		Constants.E1.drawFromCenter(g, Color.RED);
+		Constants.E2.drawFromCenter(g, Color.GREEN);
+		Constants.E3.drawFromCenter(g, Color.BLUE);
+
+		double hue;
+		float alpha;
+
+		for (float breitIndex = -90; breitIndex < 90; breitIndex += Constants.breitRes) {
+			hue = (breitIndex + 90) * 2;
+
+			if (breitIndex == 0) {
+				alpha = 1.0f;
+			} else {
+				alpha = 0.5f;
+			}
+			KugelKoords.drawBreitenGrad(g, HSLColor.toRGB((float) hue, 100, 50, alpha), Math.toRadians(breitIndex));
+		}
+		for (float längsIndex = 0; längsIndex < 360; längsIndex += Constants.laengsRes) {
+			if (längsIndex == 0) {
+				alpha = 1.0f;
+			} else {
+				alpha = 0.5f;
+			}
+			KugelKoords.drawBeautyLängenGrad(g, HSLColor.toRGB(längsIndex, 100, 50, alpha), Math.toRadians(längsIndex));
+		}
+
+		KugelKoords.drawGeodesic(g, Color.WHITE, p, q, meshObject);
+		p.drawFromCenter(g, Color.PINK);
+		q.drawFromCenter(g, Color.YELLOW);
+
+		KugelKoords.drawOutline(g, Color.ORANGE);
+	}
+}

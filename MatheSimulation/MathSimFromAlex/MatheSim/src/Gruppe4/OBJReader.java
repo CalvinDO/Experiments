@@ -1,0 +1,141 @@
+package Gruppe4;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.io.*;
+import java.util.*;
+
+public class OBJReader {
+
+	public File meshFile;
+	public BufferedReader reader;
+	public double koordArray[][];
+	public int[] polyMembers;
+	public ArrayList<int[]> polyMemberList; 
+	public Vector vertex;
+	public ArrayList<Vector> vertexList;
+	
+	public double size;
+	public Matrix startRot;
+
+	public OBJReader(String _path, double _size, Matrix _startRot) {
+
+		this.startRot = _startRot;
+		this.size = _size;
+
+		try {
+			loadData(_path);
+		} catch (Exception e) {
+			System.out.println("Sie haben ein unbekanntes Datengeschnetzeltes in den OBJReader gesteckt");
+		}
+	}
+
+	public void loadData(String _path) throws Exception {
+		this.meshFile = new File(_path);
+		this.reader = new BufferedReader(new FileReader(this.meshFile));
+		this.vertexList = new ArrayList<Vector>();
+
+		String line;
+		
+		this.vertexList = new ArrayList<Vector>();
+        this.polyMemberList = new ArrayList<int[]>();
+
+		while ((line = this.reader.readLine()) != null) {
+			if (line.startsWith("v")) {
+				readVertices(line.substring(2));
+			}
+			if (line.startsWith("f")) {
+				readFaces(line.substring(2));
+			}
+		}
+	}
+
+	public void readVertices(String _line) {
+		String segments[] = _line.split(" ");
+		double x = Double.parseDouble(segments[0]);
+		double y = Double.parseDouble(segments[1]);
+		double z = Double.parseDouble(segments[2]);
+		
+		this.vertex = new Vector(x, y, z);
+		this.vertexList.add(vertex.getRotated(this.startRot));
+	}
+
+	public void readFaces(String _line) {
+		String verticesStrings[] = _line.split(" ");
+		
+		this.polyMembers = new int[verticesStrings.length];
+		
+		int index = 0;
+		for (String str : verticesStrings) {
+			this.polyMembers[index] = Integer.parseInt(str);
+			index++;
+		}
+		this.polyMemberList.add(this.polyMembers);
+	}
+
+	public void draw(Graphics _g, Color _color, int _radius) {
+		for (Vector currentVertex : vertexList) {
+			currentVertex.times(Constants.scale * this.size).drawAsDot(_g, _color, _radius);
+		}
+	}
+
+	public void drawTranslated(Graphics _g, Color _color, int _radius, Vector _offset) {
+		for (Vector currentVertex : vertexList) {
+			currentVertex.times(Constants.scale * this.size).getAdded(_offset).drawAsDot(_g, _color, _radius);
+		}
+	}
+	
+	public void drawTranslRotFaces(Graphics _g, Color _color, Color _color2, int _alpha, int _radius, Vector _offset, Matrix _matrix) {
+		int[] xPolys;
+		int[] yPolys;
+		
+		Vector memberVertex;
+		Vector scaled;
+		Vector translated;
+		Vector rotated;
+
+		for (int[] faceMember : this.polyMemberList) {
+			xPolys = new int[faceMember.length];
+			yPolys = new int[faceMember.length];
+			
+			for(int memberIndex = 0; memberIndex < faceMember.length; memberIndex++) {
+				memberVertex = this.vertexList.get(faceMember[memberIndex]-1);
+				
+				scaled = memberVertex.times(Constants.scale * this.size);
+				translated = scaled.getAdded(_offset);
+				rotated = translated.getRotated(_matrix);
+				
+				xPolys[memberIndex] = (int) rotated.getProjected().getX();
+				yPolys[memberIndex] = (int) rotated.getProjected().getY();
+			}
+			Graphics2D g2 = (Graphics2D) _g;
+			g2.setColor(new Color(_color.getRed(), _color.getGreen(), _color.getBlue(), _alpha));
+			g2.fillPolygon(xPolys, yPolys, faceMember.length);
+			
+			g2.setStroke(new BasicStroke(1));
+			g2.setColor(new Color(_color.getRed(), _color.getGreen(), _color.getBlue(), _alpha));
+			g2.drawPolygon(xPolys, yPolys, faceMember.length);
+		}
+	}
+
+	public void drawTranslRot(Graphics _g, Color _color, int _radius, Vector _offset, Matrix _matrix) {
+		Vector scaled;
+		Vector translated;
+		Vector rotated;
+
+		for (Vector currentVertex : vertexList) {
+			scaled = currentVertex.times(Constants.scale * this.size);
+			translated = scaled.getAdded(_offset);
+			rotated = translated.getRotated(_matrix);
+			rotated.drawAsDot(_g, _color, _radius);
+		}
+	}
+
+	public void translate(Vector _input) {
+		for (Vector vertex : this.vertexList) {
+			vertex.add(_input);
+		}
+	}
+}
