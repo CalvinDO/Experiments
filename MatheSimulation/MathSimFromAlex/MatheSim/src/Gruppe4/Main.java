@@ -251,6 +251,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 		super.paintComponent(g);
 
 		time = t.GetTimeInSeconds();
+		alpha = time * 20;
 		alphaRad = Math.toRadians(alpha);
 
 		projArray = new double[][] { { -s1 * Math.sin(alphaRad), 1, 0, staticWidth / 2f },
@@ -258,7 +259,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 		projMatrix = new Matrix(projArray);
 
 		// Visual Displays
-		Main.alphaDisplay.setText(alpha + "° ");
+		Main.alphaDisplay.setText(roundAvoid(alpha, 0) + "° ");
 		Main.sDisplay.setText(roundAvoid(s1, 3) + "");
 		Main.xVectorDisplay.setText("<html><body>E1'= " + roundAvoid(Constants.E1.getProjected().getX() - Constants.O.getProjected().getX(), 2) + "<br>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+ roundAvoid(-(Constants.E1.getProjected().getY() - Constants.O.getProjected().getY()), 2) + "</body></html>");
@@ -299,7 +300,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 			Color color = HSLColor.toRGB(laengsIndex, 100, 50, alpha);
 			KugelKoords.drawLängenGrad(g, color, Math.toRadians(laengsIndex));
 		}
-		KugelKoords.drawOutline(g, Color.GRAY);
+		KugelKoords.drawOutline(g, Color.CYAN);
 
 		//KugelKoords.drawGeodesic(g, Color.WHITE, p, q, meshObject, true);
 
