@@ -17,7 +17,7 @@ public class Constants {
 	public static double increaseRate = 0.02;
 	public static double alphaIncrease = 10;
 
-	public static double maxTime = 20;
+	public static double maxTime = 15;
 
 	public static float saturation = 1.0f;
 	public static float brightness = 0.8f;

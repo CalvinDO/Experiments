@@ -171,8 +171,8 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 	public static int staticHeight = Constants.WINDOW_HEIGHT;
 	public static boolean programActive = false;
 
-	public static double s1 = 1f / Math.sqrt(2f);
-	// public static double s1 = 0.4271067811865472;
+	//public static double s1 = 1f / Math.sqrt(2f);
+	public static double s1 = 0.4271067811865472;
 	public static double alpha = 135;
 	public static double alphaRad;
 
@@ -251,7 +251,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 		super.paintComponent(g);
 
 		time = t.GetTimeInSeconds();
-		alpha = time * 20;
+		// alpha = time * 20;
 		alphaRad = Math.toRadians(alpha);
 
 		projArray = new double[][] { { -s1 * Math.sin(alphaRad), 1, 0, staticWidth / 2f },
@@ -261,10 +261,16 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 		// Visual Displays
 		Main.alphaDisplay.setText(roundAvoid(alpha, 0) + "° ");
 		Main.sDisplay.setText(roundAvoid(s1, 3) + "");
-		Main.xVectorDisplay.setText("<html><body>E1'= " + roundAvoid(Constants.E1.getProjected().getX() - Constants.O.getProjected().getX(), 2) + "<br>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+ roundAvoid(-(Constants.E1.getProjected().getY() - Constants.O.getProjected().getY()), 2) + "</body></html>");
-		Main.yVectorDisplay.setText("<html><body>E2'= " + roundAvoid(Constants.E2.getProjected().getX() - Constants.O.getProjected().getX(), 2) + "<br>"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + roundAvoid(Constants.E2.getProjected().getY() - Constants.O.getProjected().getY(), 2) + "</body></html>");
+		Main.xVectorDisplay.setText("<html><body>E1'= "
+				+ roundAvoid(Constants.E1.getProjected().getX() - Constants.O.getProjected().getX(), 2) + "<br>"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+				+ roundAvoid(-(Constants.E1.getProjected().getY() - Constants.O.getProjected().getY()), 2)
+				+ "</body></html>");
+		Main.yVectorDisplay.setText("<html><body>E2'= "
+				+ roundAvoid(Constants.E2.getProjected().getX() - Constants.O.getProjected().getX(), 2) + "<br>"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+				+ roundAvoid(Constants.E2.getProjected().getY() - Constants.O.getProjected().getY(), 2)
+				+ "</body></html>");
 
 		KugelKoords.setTime(time);
 
@@ -278,6 +284,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 		Constants.E2.draw(g, Color.GREEN, 2);
 		Constants.E3.draw(g, Color.BLUE, 2);
 
+		//Breitengrade zeichnen
 		for (float breitIndex = -90; breitIndex < 90; breitIndex += Constants.breitRes) {
 			hue = (breitIndex + 90) * 2;
 
@@ -290,6 +297,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 			KugelKoords.drawBreitenGrad(g, color, Math.toRadians(breitIndex));
 		}
 
+		//Längengrade zeichnen
 		for (float laengsIndex = 0; laengsIndex < 360; laengsIndex += Constants.laengsRes) {
 			hue = (laengsIndex + 90) * 2;
 			if (laengsIndex == 0) {
@@ -300,18 +308,16 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 			Color color = HSLColor.toRGB(laengsIndex, 100, 50, alpha);
 			KugelKoords.drawLängenGrad(g, color, Math.toRadians(laengsIndex));
 		}
+		
 		KugelKoords.drawOutline(g, Color.CYAN);
+		KugelKoords.drawGeodesic(g, Color.WHITE, p, q, meshObject, true);
 
-		//KugelKoords.drawGeodesic(g, Color.WHITE, p, q, meshObject, true);
+		// Achtung: zur Visualisierung, zweites Flugzeug auf Äquator
+//		double delta = p.angleBetweenRad(q);
+//		Vector qFake = KugelKoords.getVectorFromSpherical(delta, 0);
+//		KugelKoords.drawGeodesic(g, Color.CYAN, Constants.E1, qFake, meshObject, false);
 
-		// Achtung: zur Visualisierung
-		/*
-		 * double delta = p.angleBetweenRad(q); Vector qFake =
-		 * KugelKoords.getVectorFromSpherical(delta, 0); System.out.println(delta);
-		 * KugelKoords.drawGeodesic(g, Color.CYAN, Constants.E1, qFake, meshObject,
-		 * false);
-		 */
-		//p.draw(g, Color.PINK, 3);
-		//q.draw(g, Color.YELLOW, 3);
+		p.draw(g, Color.PINK, 3);
+		q.draw(g, Color.YELLOW, 3);
 	}
 }

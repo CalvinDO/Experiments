@@ -79,10 +79,6 @@ public class KugelKoords {
 		}
 	}
 
-	public static double distanceOnCircle(double _delta) {
-		return r * _delta;
-	}
-
 	public static void drawGeodesic(Graphics _g, Color _color, Vector _p, Vector _q, OBJReader _meshObject,
 			boolean _isPrimary) {
 		double delta = _p.angleBetweenRad(_q);
@@ -96,26 +92,50 @@ public class KugelKoords {
 		Vector uDach = nDach.kreuzprodukt(pDach).normalize();
 
 		// Für Visualisierung
-		/*
+
 		if (_isPrimary) {
-			_p.drawConnectionTo(_g, Color.RED, 4, pDach.times(Constants.scale / 2).getAdded(_p));
-			_p.drawConnectionTo(_g, Color.GREEN, 4, uDach.times(Constants.scale / 2).getAdded(_p));
-			_p.drawConnectionTo(_g, Color.BLUE, 4, nDach.times(Constants.scale / 2).getAdded(_p));
+			visualizePUN(_g, _p, pDach, uDach, nDach);
 		}
-*/
-		drawRotatedEquatorPart(_g, _color, currentDelta, Matrix.createFromPUN(pDach, uDach, nDach), _meshObject, _q);
+		if (_isPrimary) {
+			visualizePUCombination(_g, pDach, uDach);
+		}
+
+		drawRotatedEquatorPart(_g, _color, currentDelta, Matrix.createFromPUN(pDach, uDach, nDach), _meshObject, _q,
+				_isPrimary);
+	}
+
+	public static void visualizePUN(Graphics _g, Vector _p, Vector _pDach, Vector _uDach, Vector _nDach) {
+//		_pDach.times(Constants.scale / 3).draw(_g, Color.RED, 3);
+//		_uDach.times(Constants.scale / 3).draw(_g, Color.GREEN, 3);
+//		_nDach.times(Constants.scale / 3).draw(_g, Color.BLUE, 3);
+		
+		_p.getProjected().drawConnectionTo(_g, Color.RED, 4,
+				_pDach.times(Constants.scale / 4).getAdded(_p).getProjected());
+		_p.getProjected().drawConnectionTo(_g, Color.GREEN, 4,
+				_uDach.times(Constants.scale / 4).getAdded(_p).getProjected());
+		_p.getProjected().drawConnectionTo(_g, Color.BLUE, 4,
+				_nDach.times(Constants.scale / 4).getAdded(_p).getProjected());
+	}
+
+	public static void visualizePUCombination(Graphics _g, Vector _pDach, Vector _uDach) {
+		Vector multipliedPDach = _pDach.times(r * Math.cos(currentDelta));
+		multipliedPDach.draw(_g, Color.RED, 8);
+		Vector multipliedUDach = _uDach.times(r * Math.sin(currentDelta));
+		multipliedPDach.getProjected().drawConnectionTo(_g, Color.GREEN, 5, multipliedPDach.getAdded(multipliedUDach).getProjected());
+		
+		_uDach.times(Constants.scale).draw(_g, Color.GREEN, 3);
 	}
 
 	public static void drawRotatedEquatorPart(Graphics _g, Color _color, double _delta, Matrix _drehMatrix,
-			OBJReader _meshObject, Vector _goal) {
+			OBJReader _meshObject, Vector _goal, boolean _isPrimary) {
 		double theta = 0;
 
-		Vector cartFromSphere = getVectorFromSpherical(0, theta).getProjected();
+		Vector currentEquatorPosition = getVectorFromSpherical(0, theta).getProjected();
 		for (int resIndex = 0; resIndex <= res; resIndex++) {
 			double phi = resIndex / res * _delta;
 
-			cartFromSphere = getVectorFromSpherical(phi, theta);
-			newPos = _drehMatrix.times(cartFromSphere).getProjected();
+			currentEquatorPosition = getVectorFromSpherical(phi, theta);
+			newPos = _drehMatrix.times(currentEquatorPosition).getProjected();
 
 			firstPos = resIndex == 0 ? oldPos = newPos : firstPos;
 
@@ -123,7 +143,8 @@ public class KugelKoords {
 			oldPos = newPos;
 		}
 
-		Vector objectPos = _drehMatrix.times(cartFromSphere);
+		// Für Flugzeug-Visualisierung:
+		Vector objectPos = _drehMatrix.times(currentEquatorPosition);
 
 		Vector pDach = objectPos.normalize();
 		Vector nDach = objectPos.kreuzprodukt(_goal).normalize();
