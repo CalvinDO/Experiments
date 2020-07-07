@@ -93,10 +93,10 @@ public class KugelKoords {
 
 		// Für Visualisierung
 
-		if (_isPrimary) {
+		if (_isPrimary && YourGraphicsContent.showPUNVisualization) {
 			visualizePUN(_g, _p, pDach, uDach, nDach);
 		}
-		if (_isPrimary) {
+		if (_isPrimary && YourGraphicsContent.showPUCombination){
 			visualizePUCombination(_g, pDach, uDach);
 		}
 

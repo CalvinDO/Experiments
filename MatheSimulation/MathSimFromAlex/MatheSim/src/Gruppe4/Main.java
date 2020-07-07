@@ -190,6 +190,9 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 	public static Vector q = new Vector(r * Math.cos(theta2) * Math.cos(phi2), r * Math.cos(theta2) * Math.sin(phi2),
 			r * Math.sin(theta2));
 
+	public static boolean showPUNVisualization = true;
+	public static boolean showPUCombination;
+	
 	double objectStartRotY = Math.toRadians(90);
 
 	double[][] y90 = new double[][] { { Math.cos(objectStartRotY), 0, Math.sin(objectStartRotY), 0 }, { 0, 1, 0, 0 },
