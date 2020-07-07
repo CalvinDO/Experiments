@@ -34,7 +34,7 @@ public class Main {
 
 	public static JButton showPUN;
 	public static JButton showPUCombination;
-
+	
 	public static JLabel alphaDisplay;
 	public static JLabel sDisplay;
 
@@ -78,7 +78,7 @@ public class Main {
 
 		showPUN = new JButton("Show PUN");
 		styleSecondaryButton(showPUN, secondaryWidth, secondaryHeight, secondaryFontSize, mainPanel);
-
+		
 		xVectorDisplay = generateDisplayLabel("xVector", 20);
 		mainPanel.add(xVectorDisplay);
 
@@ -110,10 +110,10 @@ public class Main {
 
 		yVectorDisplay = generateDisplayLabel("yVector", 20);
 		mainPanel.add(yVectorDisplay);
-
+		
 		showPUCombination = new JButton("Show PU ");
 		styleSecondaryButton(showPUCombination, secondaryWidth, secondaryHeight, secondaryFontSize, mainPanel);
-
+		
 		frame.add(mainPanel);
 		frame.pack();
 		frame.setVisible(true);
@@ -182,7 +182,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 	public static boolean programActive = false;
 
 	public static double s1 = 1f / Math.sqrt(2f);
-	// public static double s1 = 0.4271067811865472;
+	//public static double s1 = 0.4271067811865472;
 	public static double alpha = 135;
 	public static double alphaRad;
 
@@ -202,7 +202,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 
 	public static boolean showPUNVisualization = true;
 	public static boolean showPUCombination = true;
-
+	
 	double objectStartRotY = Math.toRadians(90);
 
 	double[][] y90 = new double[][] { { Math.cos(objectStartRotY), 0, Math.sin(objectStartRotY), 0 }, { 0, 1, 0, 0 },
@@ -244,29 +244,23 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 		if (e.getSource() == Main.secondarys.get(3)) {
 			alpha -= Constants.alphaIncrease;
 		}
-
+		
 		if (e.getSource() == Main.showPUN) {
 			if (showPUNVisualization) {
 				showPUNVisualization = false;
-				Main.showPUN.setText("show PUN");
-
-			} else {
+Main.showPUN.setText("hidePUN");
 				showPUNVisualization = true;
-				Main.showPUN.setText("hide PUN");
 			}
 		}
-
+		
 		if (e.getSource() == Main.showPUCombination) {
 			if (showPUCombination) {
 				showPUCombination = false;
-				Main.showPUCombination.setText("show PU");
 			} else {
 				showPUCombination = true;
-
-				Main.showPUCombination.setText("hide PU");
 			}
 		}
-
+		
 		System.out.println(alpha);
 		System.out.println(s1);
 	}
@@ -320,7 +314,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 		Constants.E2.draw(g, Color.GREEN, 2);
 		Constants.E3.draw(g, Color.BLUE, 2);
 
-		// Breitengrade zeichnen
+		//Breitengrade zeichnen
 		for (float breitIndex = -90; breitIndex < 90; breitIndex += Constants.breitRes) {
 			hue = (breitIndex + 90) * 2;
 
@@ -333,7 +327,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 			KugelKoords.drawBreitenGrad(g, color, Math.toRadians(breitIndex));
 		}
 
-		// Längengrade zeichnen
+		//Längengrade zeichnen
 		for (float laengsIndex = 0; laengsIndex < 360; laengsIndex += Constants.laengsRes) {
 			hue = (laengsIndex + 90) * 2;
 			if (laengsIndex == 0) {
@@ -344,7 +338,7 @@ class YourGraphicsContent extends JPanel implements ActionListener {
 			Color color = HSLColor.toRGB(laengsIndex, 100, 50, alpha);
 			KugelKoords.drawLängenGrad(g, color, Math.toRadians(laengsIndex));
 		}
-
+		
 		KugelKoords.drawOutline(g, Color.CYAN);
 		KugelKoords.drawGeodesic(g, Color.WHITE, p, q, meshObject, true);
 
