@@ -7,8 +7,6 @@ var Cardioids;
         let canvas = document.querySelector("canvas");
         crc2 = canvas.getContext("2d");
         crc2.translate(canvas.width / 2, canvas.height / 2);
-        // let multiplicationInput: number = parseFloat(prompt("Enter multiplication number"));
-        // let resolutionInput: number = parseFloat(prompt("Enter resolution number"));
         update(null);
     }
     function update(_event) {
